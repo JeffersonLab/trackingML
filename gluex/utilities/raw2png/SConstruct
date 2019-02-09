@@ -1,0 +1,12 @@
+
+import os
+
+env = Environment()
+
+env.Replace( CXX = os.getenv('CXX', 'c++') )
+
+env.PrependUnique(CXXFLAGS=['-std=c++11'])
+env.AppendUnique(LIBS=['png','pthread'])
+
+env.Program(["raw2png.cc"])
+
