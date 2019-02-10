@@ -1,0 +1,14 @@
+
+
+Here are two program for converting the "images.raw" file into
+PNG image files for easy viewing of track images. The intent
+is to provide a few sample PNG files for humans to look at.
+For ML applications, it is more efficient to use a single
+file with just the image data.
+
+You probably want the python script instead of the compiled
+C++ program since it can read a gzipped file directly.
+
+
+
+
