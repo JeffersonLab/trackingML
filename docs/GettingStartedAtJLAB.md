@@ -26,7 +26,7 @@ Here are the detailed commands:
 
 ```
 easy_install --user pip
-~/.local/bin/pip install virtualenv
+~/.local/bin/pip install --user virtualenv
 ~/.local/bin/virtualenv venv
 source venv/bin/activate.csh
 ```
