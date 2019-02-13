@@ -1,5 +1,4 @@
-
-Getting Started with ML at JLab
+# Getting Started with ML at JLab
 
 Here are some instructions for setting up keras+tensorflow on
 a JLab CUE computer. There are some toy examples in the examples
@@ -25,10 +24,12 @@ The basic steps are:
 
 Here are the detailed commands:
 
-> easy_install --user pip
-> ~/.local/bin/pip install virtualenv
-> ~/.local/bin/virtualenv venv
-> source venv/bin/activate.csh
+```
+easy_install --user pip
+~/.local/bin/pip install virtualenv
+~/.local/bin/virtualenv venv
+source venv/bin/activate.csh
+```
 
 At this point the instructions are slightly different if you want
 to setup for GPU support or not. Choose the correct section below
@@ -41,7 +42,8 @@ These are instructions for installing the necessary packages to
 run on an ifarm computer. It will not take advantage of any GPU
 that may be present.
 
- > pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
+```
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
 	tensorflow \
 	keras \
 	pandas \
@@ -50,7 +52,8 @@ that may be present.
 	pillow \
 	scikit-learn \
 	opencv-python
-	
+```
+
 You can now jump to the ALL CONFIGURATIONS section below.
 
 
@@ -64,7 +67,8 @@ moment is hpci12k01 which has an Nvidia K20.
 
 Here are the detailed commands:
 
- > pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
+```
+pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
 	tensorflow-gpu \
 	keras \
 	pandas \
@@ -73,6 +77,7 @@ Here are the detailed commands:
 	pillow \
 	scikit-learn \
 	opencv-python
+```
 
 At this point you should download the cudnn binary package from
 Nvidia. That requires an active account (which is free) and a
@@ -81,17 +86,19 @@ easier, I've place a copy on the CUE as seen in the first
 instruction below. The second just moves the libraries into a
 directory where python will find them when running tensorflow.
 
- 
- > tar xzf /group/12gev_phys/ml/downloads/cudnn-9.0-linux-x64-v7.3.1.20.tgz
- > mv cuda/lib64/libcudnn* venv/lib/python2.7/site-packages/tensorflow
- > rm -rf cuda
- 
- The last thing you need to do is pull cuda 9.0 into your
- environment. This is only available on computers with GPUs
- (e.g. hpci12k01).
- 
- > module load cuda9.0
+```
+tar xzf /group/12gev_phys/ml/downloads/cudnn-9.0-linux-x64-v7.3.1.20.tgz
+mv cuda/lib64/libcudnn* venv/lib/python2.7/site-packages/tensorflow
+rm -rf cuda
+```
 
+The last thing you need to do is pull cuda 9.0 into your
+environment. This is only available on computers with GPUs
+(e.g. hpci12k01).
+ 
+```
+module load cuda9.0
+```
 
 ALL CONFIGURATIONS
 ==================================
