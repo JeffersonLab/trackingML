@@ -30,6 +30,7 @@ easy_install --user pip
 ~/.local/bin/virtualenv venv
 source venv/bin/activate.csh
 ```
+(If using bash, use `source venv/bin/activate` in the last line instead.)
 
 At this point the instructions are slightly different if you want
 to setup for GPU support or not. Choose the correct section below
