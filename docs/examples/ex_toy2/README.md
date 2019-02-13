@@ -9,13 +9,19 @@ the phi angle of a straight line in a picture.
 Images can be created with the mkphiimages program. You'll need
 to create both a training and validation set. Here are the steps:
 
-> scons
-> mkdir TRAIN VALIDATION
-> cd TRAIN
-> ../mkphiimages
-> cd ../VALIDATION
-> ../mkphiimages
-> cd ..
+scons
+
+mkdir TRAIN VALIDATION
+
+cd TRAIN
+
+../mkphiimages
+
+cd ../VALIDATION
+
+../mkphiimages
+
+cd ..
 
 The format of the images.raw.gz file is a simple one invented for
 this exercise. A single file contains 50k "images" with each
