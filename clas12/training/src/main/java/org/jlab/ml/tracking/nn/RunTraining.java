@@ -1,5 +1,8 @@
 package org.jlab.ml.tracking.nn;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -8,6 +11,7 @@ import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
 
 /*
@@ -24,7 +28,9 @@ public class RunTraining {
     
     
     public static void main(String[] args){
+        
         System.out.println("running ML tracking learning algorithm...");
+        
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(5,5)
         .nIn(3)
         .nOut(16)
@@ -54,16 +60,23 @@ public class RunTraining {
         MultiLayerNetwork network = new MultiLayerNetwork(configuration);
         network.init();
         
-        
-        /*
-        TrackingModel model = new TrackingModel();
-        MultiLayerConfiguration   config = model.getConfiguration();
-        MultiLayerNetwork        network = new MultiLayerNetwork(config);
-        
-        List<String> layerNames = network.getLayerNames();
-        for(int i = 0; i < layerNames.size(); i++){
+        try {
+            
+            ModelSerializer.writeModel(network, "data_file.nnet", true);
+            
+            
+            /*
+            TrackingModel model = new TrackingModel();
+            MultiLayerConfiguration   config = model.getConfiguration();
+            MultiLayerNetwork        network = new MultiLayerNetwork(config);
+            
+            List<String> layerNames = network.getLayerNames();
+            for(int i = 0; i < layerNames.size(); i++){
             System.out.println(String.format("%3d : %12s", i, layerNames.get(i)));
-        }*/
-        //ZooModel zooModel = ;
+            }*/
+            //ZooModel zooModel = ;
+        } catch (IOException ex) {
+            Logger.getLogger(RunTraining.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
