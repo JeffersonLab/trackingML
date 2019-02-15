@@ -1,6 +1,7 @@
 package org.jlab.ml.tracking.nn;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
@@ -11,8 +12,11 @@ import org.deeplearning4j.nn.conf.inputs.InputType;
 import org.deeplearning4j.nn.conf.layers.ConvolutionLayer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.nn.weights.WeightInit;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.optimize.listeners.TimeIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,45 +30,50 @@ import org.nd4j.linalg.activations.Activation;
  */
 public class RunTraining {
     
+    private int nEpochs = 20;
     
     public static void main(String[] args){
         
         System.out.println("running ML tracking learning algorithm...");
         
-        ConvolutionLayer layer0 = new ConvolutionLayer.Builder(5,5)
-        .nIn(3)
-        .nOut(16)
-        .stride(1,1)
-        .padding(2,2)
-        .weightInit(WeightInit.XAVIER)
-        .name("First convolution layer")
-        .activation(Activation.RELU)
-        .build();
+        TrackingModel model = new TrackingModel();
         
-        MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
-        .seed(12345)
-        .iterations(1)
-        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-        .learningRate(0.001)
-        .regularization(true)
-        .l2(0.0004)
-        .updater(Updater.NESTEROVS)
-        .momentum(0.9)
-        .list()
-            .layer(0, layer0)
-        .pretrain(false)
-        .backprop(true)
-        .setInputType(InputType.convolutional(32,32,3))
-        .build();
-        
-        MultiLayerNetwork network = new MultiLayerNetwork(configuration);
+        MultiLayerConfiguration configuration = model.getConfiguration();
+                
+        MultiLayerNetwork network = new MultiLayerNetwork(configuration);        
         network.init();
+        
+        network.addListeners(new ScoreIterationListener(1));        
+        network.addListeners(new TimeIterationListener(1));
+
+        LineImageDataIterator iter = new LineImageDataIterator();
+
+        iter.readDirectory("mldata");
+        INDArray  aInputs = iter.getInputArray();
+        INDArray aOutputs = iter.getOutputArray();
+        
+        
+        List<String> names = network.getLayerNames();
+        
+        for(int i = 0; i < names.size(); i++){
+            System.out.println(String.format("%3d : %s", i, names.get(i)));
+        }
+        
+        for(int i = 0; i < 1000; i++){
+            System.out.println("running epoch # " + i);
+            network.fit(aInputs, aOutputs);
+            double score = network.score();
+            System.out.println("epoch # " + i + " is complete with score = " + score);
+        }
+        
+        
+        
+        
         
         try {
             
             ModelSerializer.writeModel(network, "data_file.nnet", true);
-            
-            
+                        
             /*
             TrackingModel model = new TrackingModel();
             MultiLayerConfiguration   config = model.getConfiguration();

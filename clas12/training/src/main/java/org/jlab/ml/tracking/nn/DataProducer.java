@@ -81,12 +81,12 @@ public class DataProducer {
     public void generateDataSet(String directory, int samples){
         
         for (int i = 0; i < samples; i++){
-            Integer      number =  (int) (Math.random()*360.0);            
+            Integer      number = (int) (Math.random()*180.0);            
             double   efficiency = 0.01 + Math.random()*0.5;
             double        angle = Math.toRadians(number);
             String     filename = "image_" + getImageNumberString(i) + ".png";
             String         path = directory + "/" + number.toString();
-            BufferedImage    bi = this.createImage(224, 224, angle, efficiency);
+            BufferedImage    bi = this.createImage(200, 200, angle, efficiency);
             this.saveImage(bi, path, filename);
             System.out.println(path + "  -->  " + filename + " : " 
                     + angle + " deg -> " + angle*57.29);
@@ -96,7 +96,7 @@ public class DataProducer {
     
     public static void main(String[] args){
         DataProducer producer = new DataProducer();
-        BufferedImage bi = producer.createImage(224, 224, 1.57*2/4,0.1);
+        BufferedImage bi = producer.createImage(200, 200, 1.57*2/4,0.1);
         producer.saveImage(bi, "dataImage.png");
         
         producer.generateDataSet("mldata", 1000);
