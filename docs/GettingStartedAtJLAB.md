@@ -112,14 +112,16 @@ will start with "[venv]".
 Test that the installation has installed keras and tensorflow
 correctly using an interactive python session:
 
- > python \
- Python 2.7.5 (default, Nov 20 2015, 02:00:19) \
- [GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2 \
- Type "help", "copyright", "credits" or "license" for more information. \
- >>> import keras \
- Using TensorFlow backend. \
- >>> <ctl-D>
-
+```
+> python
+Python 2.7.5 (default, Nov 20 2015, 02:00:19)
+[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import keras
+Using TensorFlow backend.
+>>> <ctl-D>
+```
+	
 At this point you should be able to run a python script using keras.
 
 
