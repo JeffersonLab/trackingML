@@ -9,7 +9,7 @@ keras package which itself uses tensorflow as a backend. Tensorflow
 can optionally support GPUs (see instructions below).
 
 These instructions also rely on python's easy_install and virtualenv
-to set up a dedicate python environment where you can install the
+to set up a dedicated python environment where you can install the
 needed packages without needing sysadmin privileges.
 
 
@@ -83,7 +83,7 @@ pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
 At this point you should download the cudnn binary package from
 Nvidia. That requires an active account (which is free) and a
 little URL manipulation to get the correct version. To make it
-easier, I've place a copy on the CUE as seen in the first
+easier, I've placed a copy on the CUE as seen in the first
 instruction below. The second just moves the libraries into a
 directory where python will find them when running tensorflow.
 
