@@ -1,7 +1,7 @@
 # Getting Started with ML at JLab
 
 Here are some instructions for setting up keras+tensorflow on
-a JLab CUE computer. There are some toy examples in the examples
+a JLab CUE computer. There are some toy examples in the docs/examples
 directory that can be used to test the sytem.
 
 This system uses Python to build and train the network using the
