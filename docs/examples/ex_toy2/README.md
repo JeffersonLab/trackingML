@@ -31,6 +31,11 @@ It will open the images.raw.gz file in the current directory and
 make PNG files out of the first 25 images which you can then open
 with any viewer (e.g. eog on Linux).
 
+There are two methods demonstrated here. The first is a regression
+method that has the network itself output a single floating point
+number for phi. This works, but not terribly well.
+
+The second u
 
 Run the train.py script to try training the network.
 

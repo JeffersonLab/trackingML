@@ -12,21 +12,25 @@
 # in each directory. These can be created with the 
 # mkphiimages program. See README.md for more details.
 #
+# This trains a regression network to output a single
+# floating point number representing the phi angle.
+# This works OK, but not great. As it turns out, framing
+# the problem as a classification problem uses many
+# fewer parameters and gives much more accurate results.
+# This is left here as an example though.
+# Note: One key thing needed to make this work was to use
+# linear activation functions. Others were tried, but
+# had trouble converging.
 
 import sys
 import gzip
-#import pickle
 import pandas as pd
 import numpy as np
-np.random.seed(123)  # for reproducibility
 
 
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Dense, Reshape, Flatten, Dropout, BatchNormalization, Input, Activation
-#from keras.utils import np_utils
-#from keras.datasets import mnist
 from keras.optimizers import SGD
-#from keras_preprocessing.image import ImageDataGenerator
 from keras.callbacks import TensorBoard
 
 width = 200
@@ -46,7 +50,7 @@ STEP_SIZE_VALID = STEP_SIZE_TRAIN/10
 def generate_arrays_from_file( path, labelsdf ):
 
 	images_path = path+'/images.raw.gz'
-	print 'generator created for: ' + images_path 
+	print('generator created for: ' + images_path) 
 
 	batch_input  = []
 	batch_labels = []
@@ -62,7 +66,7 @@ def generate_arrays_from_file( path, labelsdf ):
 				pixels = np.reshape(data, [width, height, 1], order='F')
 				pixels_norm = pixels.astype(np.float) / 255.
 				
-				# Read in one set of labels
+				# Read in one set of labels normalized to units of pi
 				labels =  [ labelsdf.phi[idx]/3.14 ]
 
 				# Add to batch and check if it is time to yield
@@ -70,7 +74,6 @@ def generate_arrays_from_file( path, labelsdf ):
 				batch_labels.append( labels )
 				idx += 1
 				if len(batch_input) == BS :
-					#print 'pos = %d  %f  %f  idx=%d' % (f.tell(), np.sum(batch_input), np.sum(batch_labels), idx)
 					yield ( np.array(batch_input), np.array(batch_labels) )
 					batch_input  = []
 					batch_labels = []
@@ -82,44 +85,10 @@ def generate_arrays_from_file( path, labelsdf ):
 
 # Here we build the network model.
 model = Sequential()
-
-# CONV => RELU => POOL layer set
-chanDim = -1
-model.add(Conv2D(32, (3, 3), padding="same", input_shape=(200,200,1)))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-# (CONV => RELU) * 2 => POOL layer set
-model.add(Conv2D(64, (3, 3), padding="same"))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(Conv2D(64, (3, 3), padding="same"))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-# (CONV => RELU) * 3 => POOL layer set
-model.add(Conv2D(128, (3, 3), padding="same"))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(Conv2D(128, (3, 3), padding="same"))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(Conv2D(128, (3, 3), padding="same"))
-model.add(Activation("relu"))
-model.add(BatchNormalization(axis=chanDim))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
-# first (and only) set of FC => RELU layers
+model.add(Dense(200, input_shape=(200,200,1,), activation='linear'))
 model.add(Flatten())
-model.add(Dense(512, activation="linear"))
-#model.add(Activation("relu"))
-model.add(BatchNormalization())
-model.add(Dropout(0.5))
-# softmax classifier
-model.add(Dense(1))
-model.add(Activation("softmax"))
+model.add(Dense(5, activation='linear'))
+model.add(Dense(1, activation='linear'))
 
 
 # Compile the model and print a summary of it
@@ -146,7 +115,7 @@ history = model.fit_generator(
 )
 
 # Save model
-model.save('model2.h5')	
+model.save('model_regression.h5')	
 
 # To view the training log with the tensorboard gui
 # you can run tensorboard to fire up a web server

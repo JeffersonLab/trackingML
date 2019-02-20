@@ -17,6 +17,7 @@ import sys
 import gzip
 import pandas as pd
 import numpy as np
+import math
 np.random.seed(123)  # for reproducibility
 
 
@@ -53,7 +54,11 @@ def generate_arrays_from_file( path, labelsdf ):
 				pixels_norm = pixels.astype(np.float) / 255.
 				
 				# Read in one set of labels
-				labels =  [ labelsdf.phi[idx]/3.14 ]
+				phi = labelsdf.phi[idx]
+				labels = [phi]
+#				labels = np.zeros(360)
+#				phi_degrees = round( math.degrees(phi + math.pi) )
+#				labels[int(phi_degrees)*] = 1.0
 
 				# Add to batch and check if it is time to yield
 				batch_input.append( pixels_norm )
@@ -70,7 +75,7 @@ def generate_arrays_from_file( path, labelsdf ):
 
 
 # Load model
-model = load_model("model2.h5")
+model = load_model("model_gagik2.h5")
 model.summary()
 
 # Open labels files so we can get number of samples and pass the
@@ -90,7 +95,11 @@ with open('phi_test.dat', 'w') as f:
 		(x,y) = next(test_generator)
 		image = x[0][0]
 		phi = y[0][0]
-		phi_model = model.predict(x)
+		model_prediction = model.predict(x)
+		
+		# Find bin with largest value
+		phi_model = math.radians( float(np.argmax(model_prediction)) - 180.0)
+		
 		f.write('%f %f\n' % (phi, phi_model))
 		if (i%100) == 0:
 			sys.stdout.write('  %d/%d written  \r' % (i, NTEST))
