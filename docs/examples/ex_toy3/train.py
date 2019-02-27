@@ -1,30 +1,14 @@
 #!/usr/bin/env python
 #
-# ex_toy2
+# ex_toy3
 #
-# Train a network on images of straight tracks to find
-# the angle of the line in the image. Labels are the
-# angle in radians.
+# Train a network to calculate the phi angle from
+# images where each pixel represents a wire in a 
+# toy detector model.
 #
-# Training and validation sets should be in the 
-# TRAIN and VALIDATION directories respectively. There
-# should be a file "images_raw.gz" and "track_parms.csv"
-# in each directory. These can be created with the 
-# mkphiimages program. See README.md for more details.
+# See README.md for details.
 #
-# This treats the problem as a classification problem 
-# rather than a regression problem (at least as far as
-# the network is concerned). The network is designed to
-# output 360 values corresponding to 1 degree bins.
-# The labels are then arrays of 360 numbers with all of
-# them zero except the bin in which the true value falls
-# which is set to 1. On prediction, the bin with the 
-# largest value is taken as the angle limiting the
-# resolution to 1 degree/sqrt(12). 
-#
-# n.b. it is possible to get better resolution by combining
-# information from multiple bins in the prediction, but
-# that is not done in this example.
+
 
 import os
 import sys
@@ -47,7 +31,7 @@ from keras.applications.inception_v3 import InceptionV3
 
 width  = 36
 height = 100
-EPOCHS = 30
+EPOCHS = 10
 BS     = 1000
 GPUS   = 4
 Nouts  = 200
@@ -82,11 +66,6 @@ def generate_arrays_from_file( path, labelsdf ):
 				data = np.frombuffer(bytes, dtype='B', count=width*height)
 				pixels = np.reshape(data, [width, height, 1], order='F')
 				pixels_norm = np.transpose(pixels.astype(np.float) / 255., axes=(1, 0, 2) )
-				#if idx==0 and path=='TRAIN':
-					#for row in pixels_norm:
-						#for v in row:
-							#sys.stdout.write('%1.0f' % v[0])
-						#sys.stdout.write('\n')
 					
 				# Read in one set of labels.
 				# Here, we convert the phi value into an array with
@@ -99,18 +78,12 @@ def generate_arrays_from_file( path, labelsdf ):
 					labels[myidx] = 1.0    # one hot
 				else:
 					continue
-				#if path == 'TRAIN' and (idx%BS)==0:
-					#print('phi=%f  myidx=%d' % (phi, myidx))
-					#print( labels )
-					#print( '-------------------------------------------------')
-					#sys.exit(0)
 
 				# Add to batch and check if it is time to yield
 				batch_input.append( pixels_norm )
 				batch_labels.append( labels )
 				if len(batch_input) == BS :
 					ibatch += 1
-					#print('\nyielding batch %d for %s' % (ibatch, path))
 					yield ( np.array(batch_input), np.array(batch_labels) )
 					batch_input  = []
 					batch_labels = []
@@ -121,29 +94,21 @@ def generate_arrays_from_file( path, labelsdf ):
 
 
 with tf.device('/cpu:0'):
-#	model = InceptionV3(include_top=True, weights=None, input_tensor=None, input_shape=(height, width, 1), pooling=None, classes=Nouts)
 
 	# Here we build the network model.
 	model = Sequential()
-	#model.add(Activation("relu", input_shape=(height, width,1)))
 	model.add(Conv2D(128, (3,3), activation="relu", kernel_initializer="glorot_normal", strides=(1,1), input_shape=(height, width, 1), padding="same", data_format="channels_last") )
 	model.add(Conv2D(128, (3,3), activation="relu", kernel_initializer="glorot_normal", strides=(1,1), input_shape=(height, width, 1), padding="same", data_format="channels_last") )
 	model.add(MaxPooling2D(pool_size=(2, 2), strides=(1,1)))
 	model.add(Flatten())
-	#model.add(Dense(int(Nouts/5), activation='relu'))
-	#model.add(Dense(int(Nouts/5), activation='relu'))
-	#model.add(Dense(int(Nouts/5), activation='relu'))
-	#model.add(Dense(int(Nouts/5), activation='relu'))
 	model.add(Dense(Nouts, activation='softmax'))
-	#model.add(BatchNormalization())
 
 if GPUS<=1 :
 	parallel_model = model
 else:
 	parallel_model = multi_gpu_model( model, gpus=GPUS )
 
-# Define custom loss function that compares calcukated phi
-# to true
+# Define custom loss function that compares calcukated phi to true
 def customLoss(y_true, y_pred):
 	ones = K.ones_like(y_true[0,:])  # [1, 1, 1, 1....]
 	idx = K.cumsum(ones)             # [1, 2, 3, 4....]
@@ -158,7 +123,11 @@ def customLoss(y_true, y_pred):
 	print('wsum_true shape: ' + str(wsum_true.shape) ) 
 	return out
 
-# Test loss function
+# Below is code to test the custom loss function above.
+# It is commented out since the output can be pretty verbose.
+# It is left here as an example though since loss functions
+# are kind of tricky which makes testing them at least as tricky.
+#
 #testdf = pd.read_csv('TEST/track_parms.csv')
 #test_generator = generate_arrays_from_file('TEST', testdf)
 #x = Input(shape=(None,))
@@ -176,9 +145,8 @@ def customLoss(y_true, y_pred):
 #print('------------------------------')
 
 # Compile the model and print a summary of it
-sgd = Adadelta(clipnorm=1.0)
-#'categorical_crossentropy'
-parallel_model.compile(loss=customLoss, optimizer=sgd, metrics=['mae', 'mse'])
+opt = Adadelta(clipnorm=1.0)
+parallel_model.compile(loss=customLoss, optimizer=opt, metrics=['mae', 'mse'])
 parallel_model.summary()
 
 # Create training and validation generators
@@ -192,12 +160,15 @@ tensorboard=TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=BS*GPUS, 
 # trained on multiple GPUs. The work around is to save the original model
 # at the end of every epoch using a callback. See 
 #    https://github.com/keras-team/kersas/issues/8694
-if not os.path.exists('model_checkpoints'): os.mkdir('model_checkpoints')
 class checkpointModel(Callback):
+
 	def __init__(self, model):
 		self.model_to_save = model
+		if not os.path.exists('model_checkpoints'): os.mkdir('model_checkpoints')
+
 	def on_epoch_end(self, epoch, logs=None):
 		self.model_to_save.save('model_checkpoints/model_epoch%03d.h5' % epoch)
+
 cbk = checkpointModel( model )
 
 
