@@ -29,9 +29,11 @@ public class RunTraining {
         System.out.println("running ML tracking learning algorithm...");
         
         
-        int nIterations = Integer.parseInt(args[0]);
+        int  nIterations = Integer.parseInt(args[0]);
+        int nDataSamples = Integer.parseInt(args[1]);
         
-        System.out.println(" SET ITERATIONS = " + nIterations);
+        System.out.println(" SET ITERATIONS   = " + nIterations);
+        System.out.println(" SET DATA SAMPLES = " + nDataSamples);
         
         ChamberModel model = new ChamberModel();
         
@@ -55,7 +57,7 @@ public class RunTraining {
         
         //String filename = "/Users/gavalian/Work/Software/project-6a.0.0/clas_004013_ML.hipo";
         DataLoader loader = new DataLoader();
-        loader.generate(1000);
+        loader.generate(nDataSamples);
         
         
         INDArray  aInputs = loader.getInputArray(   );
@@ -74,7 +76,9 @@ public class RunTraining {
             long end_time   = System.currentTimeMillis();
             long elapsed_time = end_time - start_time;
             double score = network.score();
-            System.out.println("epoch # " + i + " is complete with score = " + score + " time = " + elapsed_time + " ms");
+            System.out.println("epoch # " + i  + "/" + nIterations 
+                    + " is complete with score = " + score + " time = " 
+                    + elapsed_time + " ms");
         }
                               
         try {
