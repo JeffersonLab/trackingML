@@ -36,7 +36,7 @@ public class RunEvaluationOne {
             System.out.println("\n>>>>>>>>>>>>>>> END OF SUMMARY <<<<<<<<<<<<<");
             TCanvas c1 = new TCanvas("c1",500,500);
             GraphErrors graph = new GraphErrors();
-            H1F         histo = new H1F("h1",100,-5.0,5.0);
+            H1F         histo = new H1F("h1",100,-2.0,2.0);
             long total_time   = 0L;
             
             for(int i = 0; i < nIterations; i++){
@@ -53,7 +53,7 @@ public class RunEvaluationOne {
                 total_time += end_time - start_time;
                 System.out.println(String.format(" TIME = %9.3f ", (end_time-start_time)/5000.0) );
                 double angle = loader.getDetectorHits().get(0).getAngle();
-                double angleOut = output.getDouble(0, 0)*50.0-25.0;
+                double angleOut = output.getDouble(0, 0)*20.0-10.0;
                 System.out.println(String.format("%8.5f %8.5f", angle ,angleOut));
                 graph.addPoint(angle, angleOut, 0.0, 0.0);
                  histo.fill(angle-angleOut);

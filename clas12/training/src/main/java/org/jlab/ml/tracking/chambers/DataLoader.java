@@ -73,14 +73,14 @@ public class DataLoader {
         INDArray ind = Nd4j.create(buffer, inputs);
         for(int i = 0; i < outSize; i++){
             DetectorGeometry geom = detectorHits.get(i);
-            double value = (25.0 + geom.getAngle())/50.0;
+            double value = (10 + geom.getAngle())/20.0;
             ind.putScalar(i, 0, value);
         }
         return ind;
     }
     public void generate(int samples){
         for(int i = 0; i < samples; i++){
-            double angle = Math.random()*50.0-25.0;
+            double angle = Math.random()*20.0-10.0;
             DetectorGeometry geom = new DetectorGeometry();
             geom.setAngle(angle);
             geom.processStraight(angle);

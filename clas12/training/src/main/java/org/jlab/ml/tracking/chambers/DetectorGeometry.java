@@ -5,6 +5,8 @@
  */
 package org.jlab.ml.tracking.chambers;
 
+import org.jlab.groot.data.H2F;
+import org.jlab.groot.ui.TCanvas;
 import org.jlab.jnp.geom.prim.Line3D;
 import org.jlab.jnp.geom.prim.Path3D;
 
@@ -89,12 +91,21 @@ public class DetectorGeometry {
         for(int layer = 0; layer < 36; layer++){
             int   index = getClosestWire(path,layer);
             double dist = getDistance(path,layer,index);
-            //System.out.println(String.format("%5d %5d distance = %8.5f", 
-            //        layer,index,dist));
-            if(dist<0.51) chamberBuffer[layer][index] = 1.0;
+            /*System.out.println(String.format("%5d %5d distance = %8.5f", 
+                    layer,index,dist));*/
+            if(dist<0.99) chamberBuffer[layer][index] = 1.0;
         }
     }
     
+    public H2F getH2F(){
+        H2F h = new H2F("h2",36,-0.5,35.5,112,-0.5,111.5);
+        for(int layer = 0; layer < 36; layer++){
+            for(int wire = 0; wire < 112; wire++){
+                h.setBinContent(layer, wire, chamberBuffer[layer][wire]);
+            }
+        }
+        return h;
+    }
     public Line3D getWire(int layer, int wire){
         int index = layer/6;
         //System.out.println(" layer = " + layer + " block = " + index);
@@ -106,6 +117,20 @@ public class DetectorGeometry {
     
     public static void main(String[] arg){
         DetectorGeometry  geom = new DetectorGeometry();
-        geom.processStraight(25.0);
+        geom.setAngle(-22);
+        geom.processStraight();
+
+        TCanvas c1 = new TCanvas("c1",500,500);
+        
+        c1.divide(4, 5);
+        for(int i = 0; i < 20; i++){
+            Integer angle = -10+i;
+            geom.setAngle(angle);
+            geom.processStraight();
+            H2F histo = geom.getH2F();
+            histo.setTitle("ANGLE = " + angle.toString());
+            c1.cd(i);
+            c1.draw(histo);
+        }
     }
 }

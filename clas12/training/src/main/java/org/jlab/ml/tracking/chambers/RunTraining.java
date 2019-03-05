@@ -77,7 +77,7 @@ public class RunTraining {
             long elapsed_time = end_time - start_time;
             double score = network.score();
             System.out.println("epoch # " + i  + "/" + nIterations 
-                    + " is complete with score = " + score + " time = " 
+                    + " is complete with score = " + String.format("%.12f", score) + " time = " 
                     + elapsed_time + " ms");
         }
                               
