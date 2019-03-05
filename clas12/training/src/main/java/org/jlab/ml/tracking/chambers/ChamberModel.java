@@ -50,15 +50,21 @@ public class ChamberModel {
                 .kernelSize(2,2).stride(2,2).build();
         
         //DenseLayer    dense = new DenseLayer.Builder().nOut(4096).dropOut(0.5).build();
-        DenseLayer    dense = new DenseLayer.Builder().nOut(1024).dropOut(0.5).build();//.activation(Activation.RELU).build();
+ /*       DenseLayer    dense = new DenseLayer.Builder().nOut(1024).dropOut(0.5).build();//.activation(Activation.RELU).build();
         
         OutputLayer   layerOut = new OutputLayer.Builder()
                 .lossFunction(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
-                //.lossFunction(LossFunctions.LossFunction.POISSON)
                 .nOut(50)
                 .activation(Activation.SOFTMAX)
                 .build();
-        
+   */
+ 
+      DenseLayer    dense = new DenseLayer.Builder().nOut(1024).activation(Activation.TANH).build();
+      OutputLayer   layerOut = new OutputLayer.Builder()
+                .lossFunction(LossFunctions.LossFunction.MSE)
+                .nOut(1)
+                .activation(Activation.IDENTITY)
+                .build();
         MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
         .seed(12345)
         .iterations(1)

@@ -59,7 +59,7 @@ public class RunTraining {
         
         
         INDArray  aInputs = loader.getInputArray(   );
-        INDArray aOutputs = loader.getOutputArray(  );
+        INDArray aOutputs = loader.getOutputArrayOne(  );
         
         List<String> names = network.getLayerNames();
         
@@ -76,11 +76,7 @@ public class RunTraining {
             double score = network.score();
             System.out.println("epoch # " + i + " is complete with score = " + score + " time = " + elapsed_time + " ms");
         }
-        
-        
-        
-        
-        
+                              
         try {
             
             ModelSerializer.writeModel(network, "network_chambers.nnet", true);

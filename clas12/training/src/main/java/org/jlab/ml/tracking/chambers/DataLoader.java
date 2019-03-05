@@ -21,6 +21,9 @@ public class DataLoader {
     
     public DataLoader(){ }
     
+    
+    public List<DetectorGeometry> getDetectorHits(){ return detectorHits;}
+    
     public void addData(DetectorGeometry dg){ detectorHits.add(dg);}
     
     public INDArray getInputArray(){
@@ -60,6 +63,21 @@ public class DataLoader {
         return ind;
     }
     
+    public INDArray getOutputArrayOne(){
+        int outSize = detectorHits.size();
+        int bins    = 1;
+        int[] inputs = new int[]{outSize,bins};
+        Axis  theta  = new Axis(bins,-25.0,25.0);
+        int   bufferLength = outSize*bins;
+        float[] buffer = new float[bufferLength];
+        INDArray ind = Nd4j.create(buffer, inputs);
+        for(int i = 0; i < outSize; i++){
+            DetectorGeometry geom = detectorHits.get(i);
+            double value = (25.0 + geom.getAngle())/50.0;
+            ind.putScalar(i, 0, value);
+        }
+        return ind;
+    }
     public void generate(int samples){
         for(int i = 0; i < samples; i++){
             double angle = Math.random()*50.0-25.0;
