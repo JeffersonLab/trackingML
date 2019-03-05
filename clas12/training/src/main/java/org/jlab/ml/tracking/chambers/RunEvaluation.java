@@ -57,6 +57,7 @@ public class RunEvaluation {
                 loader.generate(1);
                 INDArray input = loader.getInputArray();
                 INDArray output = network.output(input);
+                
                 double angle = loader.getDetectorHits().get(0).getAngle();
                 double angleOut = RunEvaluation.evluate(output);
                 System.out.println(String.format("%8.5f %8.5f", angle ,angleOut));

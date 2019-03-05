@@ -59,9 +59,10 @@ public class ChamberModel {
                 .build();
    */
  
-      DenseLayer    dense = new DenseLayer.Builder().nOut(1024).activation(Activation.TANH).build();
+      DenseLayer    dense = new DenseLayer.Builder().nOut(1024)
+              .activation(Activation.IDENTITY).build();
       OutputLayer   layerOut = new OutputLayer.Builder()
-                .lossFunction(LossFunctions.LossFunction.MSE)
+                .lossFunction(LossFunctions.LossFunction.MEAN_SQUARED_LOGARITHMIC_ERROR)
                 .nOut(1)
                 .activation(Activation.IDENTITY)
                 .build();
@@ -75,9 +76,9 @@ public class ChamberModel {
         .updater(Updater.NESTEROVS)
         .momentum(0.9)
         .list()
-            .layer(0, layer0).layer(1, layer1).layer(2, layer2pool)//.layer(3, layerOut)
-                .layer(3, dense)
-                .layer(4, layerOut)
+            .layer(0, layer0).layer(1, layer1)//.layer(2, layer2pool)//.layer(3, layerOut)
+                .layer(2, dense)
+                .layer(3, layerOut)
         .pretrain(false)
         .backprop(true)
         .setInputType(InputType.convolutional(36,112,1))
