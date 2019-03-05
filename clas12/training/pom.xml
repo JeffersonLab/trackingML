@@ -35,6 +35,11 @@
         <artifactId>jnp-math</artifactId>
         <version>1.1-SNAPSHOT</version>
       </dependency>
+      <dependency>
+        <groupId>org.jlab.jnp</groupId>
+        <artifactId>jnp-geometry</artifactId>
+        <version>1.1-SNAPSHOT</version>
+      </dependency>
 
     </dependencies>
 
