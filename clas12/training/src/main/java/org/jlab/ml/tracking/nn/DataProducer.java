@@ -32,6 +32,7 @@ public class DataProducer {
         }
             
         double radious = centerX;
+        
         for(double r = 0; r < radious; r+=0.2){
             double xc = r*Math.cos(angle);
             double yc = r*Math.sin(angle);

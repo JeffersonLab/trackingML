@@ -1,0 +1,206 @@
+running epoch # 0
+epoch # 0 is complete with score = 10.738913804491094 time = 52592 ms
+running epoch # 1
+epoch # 1 is complete with score = 10.726978257470021 time = 49125 ms
+running epoch # 2
+epoch # 2 is complete with score = 10.7096813809597 time = 49539 ms
+running epoch # 3
+epoch # 3 is complete with score = 10.687969466082286 time = 45050 ms
+running epoch # 4
+epoch # 4 is complete with score = 10.662090559238598 time = 50114 ms
+running epoch # 5
+epoch # 5 is complete with score = 10.632555404033644 time = 50568 ms
+running epoch # 6
+epoch # 6 is complete with score = 10.599486068397255 time = 44401 ms
+running epoch # 7
+epoch # 7 is complete with score = 10.564261458261237 time = 44208 ms
+running epoch # 8
+epoch # 8 is complete with score = 10.525503646855189 time = 44236 ms
+running epoch # 9
+epoch # 9 is complete with score = 10.484800523569023 time = 44663 ms
+running epoch # 10
+epoch # 10 is complete with score = 10.442243884782068 time = 45003 ms
+running epoch # 11
+epoch # 11 is complete with score = 10.3976755280647 time = 44595 ms
+running epoch # 12
+epoch # 12 is complete with score = 10.35167162563705 time = 44770 ms
+running epoch # 13
+epoch # 13 is complete with score = 10.304411864902038 time = 51617 ms
+running epoch # 14
+epoch # 14 is complete with score = 10.255948981075825 time = 46720 ms
+running epoch # 15
+epoch # 15 is complete with score = 10.206692154072234 time = 46296 ms
+running epoch # 16
+epoch # 16 is complete with score = 10.15684450328458 time = 45908 ms
+running epoch # 17
+epoch # 17 is complete with score = 10.106539825484885 time = 46320 ms
+running epoch # 18
+epoch # 18 is complete with score = 10.056001746325821 time = 46149 ms
+running epoch # 19
+epoch # 19 is complete with score = 10.005204882461314 time = 45788 ms
+running epoch # 20
+epoch # 20 is complete with score = 9.954353330633241 time = 44859 ms
+running epoch # 21
+epoch # 21 is complete with score = 9.903693186565537 time = 45584 ms
+running epoch # 22
+epoch # 22 is complete with score = 9.852932457498952 time = 46959 ms
+running epoch # 23
+epoch # 23 is complete with score = 9.802011572835337 time = 44996 ms
+running epoch # 24
+epoch # 24 is complete with score = 9.750960807020341 time = 45619 ms
+running epoch # 25
+epoch # 25 is complete with score = 9.700081914248868 time = 45195 ms
+running epoch # 26
+epoch # 26 is complete with score = 9.649364157638894 time = 44552 ms
+running epoch # 27
+epoch # 27 is complete with score = 9.59886319963561 time = 46351 ms
+running epoch # 28
+epoch # 28 is complete with score = 9.548992123480437 time = 44494 ms
+running epoch # 29
+epoch # 29 is complete with score = 9.49941987458292 time = 45008 ms
+running epoch # 30
+epoch # 30 is complete with score = 9.450721651900786 time = 45403 ms
+running epoch # 31
+epoch # 31 is complete with score = 9.402709956172908 time = 45560 ms
+running epoch # 32
+epoch # 32 is complete with score = 9.355541032573177 time = 45809 ms
+running epoch # 33
+epoch # 33 is complete with score = 9.309062541121039 time = 46676 ms
+running epoch # 34
+epoch # 34 is complete with score = 9.263466861226304 time = 46617 ms
+running epoch # 35
+epoch # 35 is complete with score = 9.218727629346947 time = 45486 ms
+running epoch # 36
+epoch # 36 is complete with score = 9.174839961112356 time = 46281 ms
+running epoch # 37
+epoch # 37 is complete with score = 9.132105612689937 time = 46227 ms
+running epoch # 38
+epoch # 38 is complete with score = 9.090137868166787 time = 45175 ms
+running epoch # 39
+epoch # 39 is complete with score = 9.049168170600863 time = 46442 ms
+running epoch # 40
+epoch # 40 is complete with score = 9.009264877274715 time = 62565 ms
+running epoch # 41
+epoch # 41 is complete with score = 8.970094007831674 time = 50312 ms
+running epoch # 42
+epoch # 42 is complete with score = 8.932318645884356 time = 52849 ms
+running epoch # 43
+epoch # 43 is complete with score = 8.89500324412642 time = 55741 ms
+running epoch # 44
+epoch # 44 is complete with score = 8.859063822827132 time = 49259 ms
+running epoch # 45
+epoch # 45 is complete with score = 8.823996473805364 time = 47565 ms
+running epoch # 46
+epoch # 46 is complete with score = 8.78984318366621 time = 45909 ms
+running epoch # 47
+epoch # 47 is complete with score = 8.756671337298442 time = 46905 ms
+running epoch # 48
+epoch # 48 is complete with score = 8.72446531553897 time = 46943 ms
+running epoch # 49
+epoch # 49 is complete with score = 8.693045423244062 time = 46665 ms
+running epoch # 50
+epoch # 50 is complete with score = 8.662605998837675 time = 47602 ms
+running epoch # 51
+epoch # 51 is complete with score = 8.633030835736037 time = 46486 ms
+running epoch # 52
+epoch # 52 is complete with score = 8.60389414923127 time = 46602 ms
+running epoch # 53
+epoch # 53 is complete with score = 8.576072890899974 time = 46528 ms
+running epoch # 54
+epoch # 54 is complete with score = 8.548707685866264 time = 44331 ms
+running epoch # 55
+epoch # 55 is complete with score = 8.522153029371117 time = 42978 ms
+running epoch # 56
+epoch # 56 is complete with score = 8.496397201175627 time = 41641 ms
+running epoch # 57
+epoch # 57 is complete with score = 8.471358168125253 time = 41696 ms
+running epoch # 58
+epoch # 58 is complete with score = 8.44685819928729 time = 41060 ms
+running epoch # 59
+epoch # 59 is complete with score = 8.423032059822587 time = 42311 ms
+running epoch # 60
+epoch # 60 is complete with score = 8.399691270546734 time = 49621 ms
+running epoch # 61
+epoch # 61 is complete with score = 8.377358291350149 time = 59367 ms
+running epoch # 62
+epoch # 62 is complete with score = 8.354925702051887 time = 58342 ms
+running epoch # 63
+epoch # 63 is complete with score = 8.333473585434099 time = 58132 ms
+running epoch # 64
+epoch # 64 is complete with score = 8.31266014205338 time = 60562 ms
+running epoch # 65
+epoch # 65 is complete with score = 8.292347674017709 time = 60563 ms
+running epoch # 66
+epoch # 66 is complete with score = 8.27215336883795 time = 43766 ms
+running epoch # 67
+epoch # 67 is complete with score = 8.252778397736027 time = 44203 ms
+running epoch # 68
+epoch # 68 is complete with score = 8.233800889532846 time = 41629 ms
+running epoch # 69
+epoch # 69 is complete with score = 8.215236466006212 time = 42617 ms
+running epoch # 70
+epoch # 70 is complete with score = 8.197145678273664 time = 41192 ms
+running epoch # 71
+epoch # 71 is complete with score = 8.179486528010996 time = 42341 ms
+running epoch # 72
+epoch # 72 is complete with score = 8.162640854243037 time = 42794 ms
+running epoch # 73
+epoch # 73 is complete with score = 8.145484144079495 time = 43056 ms
+running epoch # 74
+epoch # 74 is complete with score = 8.129085250288263 time = 42502 ms
+running epoch # 75
+epoch # 75 is complete with score = 8.113207837867673 time = 40621 ms
+running epoch # 76
+epoch # 76 is complete with score = 8.098051619608649 time = 41396 ms
+running epoch # 77
+epoch # 77 is complete with score = 8.082682507461662 time = 41058 ms
+running epoch # 78
+epoch # 78 is complete with score = 8.067935954822733 time = 44830 ms
+running epoch # 79
+epoch # 79 is complete with score = 8.053725046890348 time = 43357 ms
+running epoch # 80
+epoch # 80 is complete with score = 8.039670387470572 time = 42742 ms
+running epoch # 81
+epoch # 81 is complete with score = 8.026219731786737 time = 40584 ms
+running epoch # 82
+epoch # 82 is complete with score = 8.012892613291278 time = 43238 ms
+running epoch # 83
+epoch # 83 is complete with score = 8.000514223528956 time = 42970 ms
+running epoch # 84
+epoch # 84 is complete with score = 7.988032318230906 time = 43169 ms
+running epoch # 85
+epoch # 85 is complete with score = 7.976162716457133 time = 46677 ms
+running epoch # 86
+epoch # 86 is complete with score = 7.964554346461084 time = 57786 ms
+running epoch # 87
+epoch # 87 is complete with score = 7.952997735721803 time = 58003 ms
+running epoch # 88
+epoch # 88 is complete with score = 7.9421979574786175 time = 55402 ms
+running epoch # 89
+epoch # 89 is complete with score = 7.931240955126972 time = 47196 ms
+running epoch # 90
+epoch # 90 is complete with score = 7.92105104066788 time = 45572 ms
+running epoch # 91
+epoch # 91 is complete with score = 7.910696088034601 time = 46478 ms
+running epoch # 92
+epoch # 92 is complete with score = 7.900758615754688 time = 47124 ms
+running epoch # 93
+epoch # 93 is complete with score = 7.891202002728933 time = 47145 ms
+running epoch # 94
+epoch # 94 is complete with score = 7.882023319372815 time = 46637 ms
+running epoch # 95
+epoch # 95 is complete with score = 7.8730809629246306 time = 46027 ms
+running epoch # 96
+epoch # 96 is complete with score = 7.864319759990207 time = 47872 ms
+running epoch # 97
+epoch # 97 is complete with score = 7.855166953477254 time = 45448 ms
+running epoch # 98
+epoch # 98 is complete with score = 7.847269518764286 time = 51047 ms
+running epoch # 99
+epoch # 99 is complete with score = 7.839144545511198 time = 50251 ms
+running epoch # 100
+epoch # 100 is complete with score = 7.831296426667409 time = 48493 ms
+running epoch # 101
+epoch # 101 is complete with score = 7.824112858560762 time = 47979 ms
+running epoch # 102
+epoch # 102 is complete with score = 7.8163663026528996 time = 47423 ms

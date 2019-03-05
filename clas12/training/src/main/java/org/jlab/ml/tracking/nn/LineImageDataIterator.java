@@ -114,7 +114,8 @@ public class LineImageDataIterator {
         return ind;
     }
     
-    public INDArray getInputArray(){        
+    public INDArray getInputArray(){
+        
         int count = inputFiles.size();
         int bufferLength = count*200*200;
         float[] buffer   = new float[bufferLength];
