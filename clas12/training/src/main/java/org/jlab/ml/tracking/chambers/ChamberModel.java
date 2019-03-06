@@ -27,7 +27,7 @@ public class ChamberModel {
         
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3,3)
         .nIn(1)
-        .nOut(2)
+        .nOut(4)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -36,8 +36,8 @@ public class ChamberModel {
         .build();
         
         ConvolutionLayer layer1 = new ConvolutionLayer.Builder(3,3)
-        .nIn(2)
-        .nOut(4)
+        .nIn(4)
+        .nOut(8)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -59,7 +59,7 @@ public class ChamberModel {
                 .build();
    */
  
-      DenseLayer    dense = new DenseLayer.Builder().nOut(1024)
+      DenseLayer    dense = new DenseLayer.Builder().nOut(2048)
               .activation(Activation.TANH).build();
       
       OutputLayer   layerOut = new OutputLayer.Builder()
@@ -71,7 +71,7 @@ public class ChamberModel {
         .seed(12345)
         .iterations(1)
         .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-        .learningRate(0.01)
+        .learningRate(0.001)
         .regularization(true)
         .l2(0.0004)
         .updater(Updater.NESTEROVS)

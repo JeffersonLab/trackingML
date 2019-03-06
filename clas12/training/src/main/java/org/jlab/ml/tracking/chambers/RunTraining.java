@@ -42,6 +42,8 @@ public class RunTraining {
         MultiLayerNetwork network = new MultiLayerNetwork(configuration);        
         network.init();
         
+        
+        System.out.println(network.summary());
         network.addListeners(new ScoreIterationListener(1));        
         network.addListeners(new TimeIterationListener(1));
 
