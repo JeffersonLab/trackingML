@@ -5,6 +5,8 @@
  */
 package org.jlab.ml.tracking.chambers;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.jlab.groot.data.H2F;
 import org.jlab.groot.ui.TCanvas;
 import org.jlab.jnp.geom.prim.Line3D;
@@ -91,9 +93,10 @@ public class DetectorGeometry {
         for(int layer = 0; layer < 36; layer++){
             int   index = getClosestWire(path,layer);
             double dist = getDistance(path,layer,index);
-            /*System.out.println(String.format("%5d %5d distance = %8.5f", 
-                    layer,index,dist));*/
+            //System.out.println(String.format("%5d %5d distance = %8.5f", 
+            //        layer,index,dist));
             if(dist<0.99) chamberBuffer[layer][index] = 1.0;
+            //if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
         }
     }
     
@@ -108,22 +111,52 @@ public class DetectorGeometry {
     }
     public Line3D getWire(int layer, int wire){
         int index = layer/6;
+        int localLayer = layer - 6*index;
         //System.out.println(" layer = " + layer + " block = " + index);
-        double z_position = chamberPositions[index] + ((double) wire);
+        double z_position = chamberPositions[index] + ((double) 3.0*localLayer);
         double x_position = 56.5 - wire;
+        
+        //System.out.println(" layer = " + layer + " block = " + index +
+        //        String.format(" z = %8.5f ",z_position));
         return new Line3D(x_position, -wireLength/2.0, z_position,
                           x_position,  wireLength/2.0, z_position);
     }
     
     public static void main(String[] arg){
+        
+        /*List<Line3D> lines = new ArrayList<Line3D>();
+        DetectorGeometry  geom = new DetectorGeometry();
+        
+        for(int i = 0; i < 10; i++){
+            double z = 50.0 + 2.0*i;
+            Line3D line = new Line3D(25.0,-30,z,25.0,30,z);
+            lines.add(line);
+        }
+        double r = 200.0;
+        double a = Math.toRadians(23);
+        Line3D path = new Line3D(0.0,0.0,0.0, r*Math.sin(a),0.0,r*Math.cos(a));
+        path.show();
+        
+        for(int i = 0; i < lines.size(); i++){
+            Line3D dist = path.distanceSegments(lines.get(i));
+            System.out.println(i + " " + dist.length());            
+        }
+        System.out.println("\n\n============>>>>>>");
+        for(int layer = 0; layer < 12; layer++){
+            Line3D wire = geom.getWire(layer, 20);
+            //wire.show();
+            Line3D dist = path.distanceSegments(wire);
+            System.out.println(layer + " " + dist.length()); 
+        }*/
+        
         DetectorGeometry  geom = new DetectorGeometry();
         geom.setAngle(-22);
         geom.processStraight();
 
         TCanvas c1 = new TCanvas("c1",500,500);
         
-        c1.divide(4, 5);
-        for(int i = 0; i < 20; i++){
+        c1.divide(2, 2);
+        for(int i = 0; i < 4; i++){
             Integer angle = -10+i;
             geom.setAngle(angle);
             geom.processStraight();
