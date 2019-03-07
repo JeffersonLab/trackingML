@@ -38,26 +38,27 @@ public class RunEvaluationOne {
             GraphErrors graph = new GraphErrors();
             H1F         histo = new H1F("h1",300,-2.0,2.0);
             long total_time   = 0L;
-            
+            long start_time = System.currentTimeMillis();
             for(int i = 0; i < nIterations; i++){
                 DataLoader loader = new DataLoader();
                 loader.generate(1);
                 INDArray input = loader.getInputArray();
                 INDArray output = network.output(input);
-                long start_time = System.currentTimeMillis();
+
                 /*for(int t = 0; t < 5000; t++){
                     output = network.output(input);
                 }*/
                 
-                long end_time = System.currentTimeMillis();
-                total_time += end_time - start_time;
-                System.out.println(String.format(" TIME = %9.3f ", (end_time-start_time)/5000.0) );
+                
+                //System.out.println(String.format(" TIME = %9.3f ", (end_time-start_time)/5000.0) );
                 double angle = loader.getDetectorHits().get(0).getAngle();
                 double angleOut = output.getDouble(0, 0)*20.0-10.0;
-                System.out.println(String.format("%8.5f %8.5f", angle ,angleOut));
+                //System.out.println(String.format("%8.5f %8.5f", angle ,angleOut));
                 graph.addPoint(angle, angleOut, 0.0, 0.0);
                  histo.fill((angle-angleOut));
             }
+            long end_time = System.currentTimeMillis();
+            total_time += end_time - start_time;
             c1.divide(2,1);
             c1.cd(0);
             c1.draw(graph);
@@ -65,7 +66,7 @@ public class RunEvaluationOne {
             c1.draw(histo);
             
             System.out.println("TOTAL TIME = " + total_time);
-            System.out.println(String.format("TIME PER EVAL = %9.3f", total_time/(5000.0*nIterations)));
+            System.out.println(String.format("TIME PER EVAL = %9.3f", total_time/((double)nIterations)));
             } catch (IOException ex) {
             Logger.getLogger(org.jlab.ml.tracking.nn.RunEvaluation.class.getName()).log(Level.SEVERE, null, ex);
         
