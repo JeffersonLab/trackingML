@@ -95,8 +95,8 @@ public class DetectorGeometry {
             double dist = getDistance(path,layer,index);
             //System.out.println(String.format("%5d %5d distance = %8.5f", 
             //        layer,index,dist));
-            if(dist<0.99) chamberBuffer[layer][index] = 1.0;
-            //if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
+            //if(dist<0.99) chamberBuffer[layer][index] = 1.0;
+            if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
         }
     }
     

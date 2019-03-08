@@ -79,8 +79,10 @@ public class DataLoader {
         return ind;
     }
     public void generate(int samples){
+        
         for(int i = 0; i < samples; i++){
-            double angle = Math.random()*20.0-10.0;
+            //double angle = Math.random()*20.0-10.0;
+            double angle = Math.random()*18.0-9.0;
             DetectorGeometry geom = new DetectorGeometry();
             geom.setAngle(angle);
             geom.processStraight(angle);
