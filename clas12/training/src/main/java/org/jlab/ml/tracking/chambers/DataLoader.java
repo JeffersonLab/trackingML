@@ -74,10 +74,11 @@ public class DataLoader {
         for(int i = 0; i < outSize; i++){
             DetectorGeometry geom = detectorHits.get(i);
             double value = (10 + geom.getAngle())/20.0;
-            ind.putScalar(i, 0, value);
+            ind.putScalar(i, 0, 10+geom.getAngle());
         }
         return ind;
     }
+    
     public void generate(int samples){
         
         for(int i = 0; i < samples; i++){

@@ -58,13 +58,14 @@ public class RunTraining {
         */
         
         //String filename = "/Users/gavalian/Work/Software/project-6a.0.0/clas_004013_ML.hipo";
-        DataLoader loader = new DataLoader();
+        
+        /*DataLoader loader = new DataLoader();
         loader.generate(nDataSamples);
         
         
         INDArray  aInputs = loader.getInputArray(   );
         INDArray aOutputs = loader.getOutputArrayOne(  );
-        
+        */
         List<String> names = network.getLayerNames();
         
         for(int i = 0; i < names.size(); i++){
@@ -72,7 +73,16 @@ public class RunTraining {
         }
         
         for(int i = 0; i < nIterations; i++){
+            
+
+            DataLoader loader = new DataLoader();
+            loader.generate(nDataSamples);
+            
+            INDArray  aInputs = loader.getInputArray(   );
+            INDArray aOutputs = loader.getOutputArrayOne(  );
+            
             System.out.println("running epoch # " + i);
+            System.out.println(">> generating new sample with # " + nDataSamples);
             long start_time = System.currentTimeMillis();
             network.fit(aInputs, aOutputs);
             long end_time   = System.currentTimeMillis();

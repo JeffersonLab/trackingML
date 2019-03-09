@@ -26,14 +26,16 @@ public class RunEvaluationOne {
     public static void main(String[] args){
         // File file = new File("clas12_tracking_RELU.nnet");
        File file = new File("network_chambers_1k_epoch.nnet");
-        int  nIterations = 15000;
+        int  nIterations = 500;
         
         
         long totalTime = 0L;
         try {
+            
             MultiLayerNetwork network = ModelSerializer.restoreMultiLayerNetwork(file);
             
             System.out.println(network.summary());
+            
             String score = "SCORE = " + String.format("%.8f", network.score());
             System.out.println("\n>>>>>>>>>>>>>>> END OF SUMMARY <<<<<<<<<<<<<");
             System.out.println(score);
@@ -100,6 +102,7 @@ public class RunEvaluationOne {
             DataFitter.fit(funcg, histo, "");
             c1.cd(1);
             c1.draw(funcg,"same");
+            System.out.println("SCORE = " + network.score());
             System.out.println("TOTAL TIME = " + total_time + " NANO = " + total_nano);
             System.out.println(String.format("TIME PER EVAL = %9.3f", total_nano/((double)nIterations)/1000000.0));
             } catch (IOException ex) {

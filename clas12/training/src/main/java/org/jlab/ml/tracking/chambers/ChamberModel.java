@@ -23,6 +23,7 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
  * @author gavalian
  */
 public class ChamberModel {
+    
     public MultiLayerConfiguration getConfiguration(){
         
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3,3)
@@ -37,7 +38,7 @@ public class ChamberModel {
         
         ConvolutionLayer layer1 = new ConvolutionLayer.Builder(3,3)
         .nIn(16)
-        .nOut(32)
+        .nOut(16)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -59,7 +60,7 @@ public class ChamberModel {
                 .build();
    */
  
-      DenseLayer    dense = new DenseLayer.Builder().nOut(2048)
+      DenseLayer    dense = new DenseLayer.Builder().nOut(1024)
               .activation(Activation.TANH).build();
       
       OutputLayer   layerOut = new OutputLayer.Builder()
@@ -74,6 +75,7 @@ public class ChamberModel {
          .optimizationAlgo(OptimizationAlgorithm.LINE_GRADIENT_DESCENT)
         .learningRate(0.01)
         .regularization(true)
+        //.l2(0.0004)
         .l2(0.0004)
         .updater(Updater.NESTEROVS)
         .momentum(0.9)
