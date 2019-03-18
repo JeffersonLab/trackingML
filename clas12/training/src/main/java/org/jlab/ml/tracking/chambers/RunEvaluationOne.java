@@ -16,6 +16,7 @@ import org.jlab.groot.data.H1F;
 import org.jlab.groot.fitter.DataFitter;
 import org.jlab.groot.math.F1D;
 import org.jlab.groot.ui.TCanvas;
+import org.jlab.jnp.readers.TextFileWriter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
@@ -23,6 +24,41 @@ import org.nd4j.linalg.api.ndarray.INDArray;
  * @author gavalian
  */
 public class RunEvaluationOne {
+    
+    private String directory = "";
+    
+    public RunEvaluationOne(String outputDir){
+       directory = outputDir; 
+    }
+    public RunEvaluationOne(){}
+    
+    public void setDirectory(String outputDir){
+        directory = outputDir;
+    }
+    
+    public void run(MultiLayerNetwork network, int epoch, int count){
+        String outputFile = directory + 
+                String.format("/network_eval_%d.txt",epoch);
+        
+        TextFileWriter  writer = new TextFileWriter();
+        writer.open(outputFile);
+        
+        double[] params = new double[4];
+        
+        for(int i = 0; i < count; i++){
+                DataLoader loader = new DataLoader();
+                loader.generate(1);
+                INDArray input = loader.getInputArray();
+                INDArray output = network.output(input);
+                params[0] = loader.getDetectorHits().get(0).getAngle();
+                params[1] = loader.getDetectorHits().get(0).getVertex();
+                params[2] = output.getDouble(0, 0)*20.0-10.0;
+                params[3] = output.getDouble(0, 1)*5.0-5.0;
+                writer.writeDouble(params);
+        }
+        writer.close();                
+    }
+    
     public static void main(String[] args){
         // File file = new File("clas12_tracking_RELU.nnet");
        File file = new File("network_chambers_1k_epoch.nnet");

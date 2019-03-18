@@ -65,7 +65,7 @@ public class DataLoader {
     
     public INDArray getOutputArrayOne(){
         int outSize = detectorHits.size();
-        int bins    = 1;
+        int bins    = 2;
         int[] inputs = new int[]{outSize,bins};
         Axis  theta  = new Axis(bins,-25.0,25.0);
         int   bufferLength = outSize*bins;
@@ -74,7 +74,9 @@ public class DataLoader {
         for(int i = 0; i < outSize; i++){
             DetectorGeometry geom = detectorHits.get(i);
             double value = (10 + geom.getAngle())/20.0;
-            ind.putScalar(i, 0, 10+geom.getAngle());
+            double z     = (geom.getVertex()+5.0)/5.0;
+            ind.putScalar(i, 0, value);
+            ind.putScalar(i, 1, z);
         }
         return ind;
     }
@@ -85,7 +87,9 @@ public class DataLoader {
             //double angle = Math.random()*20.0-10.0;
             double angle = Math.random()*18.0-9.0;
             DetectorGeometry geom = new DetectorGeometry();
+            geom.setVertex(-5.0, 0.0);
             geom.setAngle(angle);
+            geom.reset();
             geom.processStraight(angle);
             detectorHits.add(geom);
         }

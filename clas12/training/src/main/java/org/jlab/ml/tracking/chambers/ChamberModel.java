@@ -65,14 +65,16 @@ public class ChamberModel {
       
       OutputLayer   layerOut = new OutputLayer.Builder()
                 .lossFunction(LossFunctions.LossFunction.MSE)
-                .nOut(1)
+                .nOut(2)
                 .activation(Activation.IDENTITY)
                 .build();
+      
+      
         MultiLayerConfiguration configuration = new NeuralNetConfiguration.Builder()
         .seed(12345)
         .iterations(1)
         //.optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-         .optimizationAlgo(OptimizationAlgorithm.LINE_GRADIENT_DESCENT)
+         .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
         .learningRate(0.01)
         .regularization(true)
         //.l2(0.0004)
@@ -81,8 +83,8 @@ public class ChamberModel {
         .momentum(0.9)
         .list()
             .layer(0, layer0).layer(1, layer1).layer(2, layer2pool)//.layer(3, layerOut)
-                //.layer(3, dense)
-                .layer(3, layerOut)
+                .layer(3, dense)
+                .layer(4, layerOut)
         .pretrain(false)
         .backprop(true)
         .setInputType(InputType.convolutional(36,112,1))

@@ -23,12 +23,19 @@ public class DetectorGeometry {
     private double   wireLength       = 30.0;
     private double[][] chamberBuffer  = new double[36][112];
     private double     trackAngleDegrees = 0.0;
-    
+    private double     vertexMin         = 0.0;
+    private double     vertexMax         = 0.0;
+    private double     vertexZcoord      = 0.0;
     
     public DetectorGeometry(){
         
     }
     
+    
+    public void setVertex(double min, double max){
+        this.vertexMin = min;
+        this.vertexMax = max;
+    }
     
     public void setAngle(double angle){
         this.trackAngleDegrees = angle;
@@ -47,13 +54,16 @@ public class DetectorGeometry {
         reset();
         double angle_rad = Math.toRadians(angle);
         double r         = 800.0;
-        Line3D     track = new Line3D(0.0,0.0,0.0,r*Math.sin(angle_rad),0.0,r*Math.cos(angle_rad));
+        vertexZcoord   = vertexMin + Math.random()*(vertexMax-vertexMin);
+        Line3D     track = new Line3D(0.0,0.0,vertexZcoord,r*Math.sin(angle_rad),0.0,
+                vertexZcoord+r*Math.cos(angle_rad));
         Path3D     trackPath = new Path3D();
         trackPath.addPoint(track.origin());
         trackPath.addPoint(track.end());        
         getHits(trackPath);
     }
     
+    public double getVertex(){ return this.vertexZcoord;}
     public final double[][] getBuffer(){ return chamberBuffer;}
             
     public void reset(){
@@ -109,6 +119,7 @@ public class DetectorGeometry {
         }
         return h;
     }
+    
     public Line3D getWire(int layer, int wire){
         int index = layer/6;
         int localLayer = layer - 6*index;
@@ -152,7 +163,7 @@ public class DetectorGeometry {
         DetectorGeometry  geom = new DetectorGeometry();
         geom.setAngle(-22);
         geom.processStraight();
-
+        geom.setVertex(-5, 0);
         TCanvas c1 = new TCanvas("c1",500,500);
         
         c1.divide(2, 2);
