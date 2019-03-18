@@ -28,7 +28,7 @@ public class ChamberModel {
         
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3,3)
         .nIn(1)
-        .nOut(16)
+        .nOut(4)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -37,8 +37,8 @@ public class ChamberModel {
         .build();
         
         ConvolutionLayer layer1 = new ConvolutionLayer.Builder(3,3)
-        .nIn(16)
-        .nOut(16)
+        .nIn(4)
+        .nOut(4)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -83,8 +83,8 @@ public class ChamberModel {
         .momentum(0.9)
         .list()
             .layer(0, layer0).layer(1, layer1).layer(2, layer2pool)//.layer(3, layerOut)
-                .layer(3, dense)
-                .layer(4, layerOut)
+                //.layer(3, dense)
+                .layer(3, layerOut)
         .pretrain(false)
         .backprop(true)
         .setInputType(InputType.convolutional(36,112,1))

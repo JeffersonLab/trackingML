@@ -55,7 +55,8 @@ public class DetectorGeometry {
         double angle_rad = Math.toRadians(angle);
         double r         = 800.0;
         vertexZcoord   = vertexMin + Math.random()*(vertexMax-vertexMin);
-        Line3D     track = new Line3D(0.0,0.0,vertexZcoord,r*Math.sin(angle_rad),0.0,
+        Line3D     track = new Line3D(0.0,0.0,vertexZcoord,
+                r*Math.sin(angle_rad),0.0,
                 vertexZcoord+r*Math.cos(angle_rad));
         Path3D     trackPath = new Path3D();
         trackPath.addPoint(track.origin());
@@ -105,8 +106,8 @@ public class DetectorGeometry {
             double dist = getDistance(path,layer,index);
             //System.out.println(String.format("%5d %5d distance = %8.5f", 
             //        layer,index,dist));
-            if(dist<0.99) chamberBuffer[layer][index] = 1.0;
-            //if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
+            //if(dist<0.99) chamberBuffer[layer][index] = 1.0;
+            if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
         }
     }
     
@@ -166,13 +167,14 @@ public class DetectorGeometry {
         geom.setVertex(-5, 0);
         TCanvas c1 = new TCanvas("c1",500,500);
         
-        c1.divide(2, 2);
-        for(int i = 0; i < 4; i++){
-            Integer angle = -10+i;
+        c1.divide(4, 4);
+        for(int i = 0; i < 16; i++){
+            Integer angle = -15;//-10+i;
             geom.setAngle(angle);
             geom.processStraight();
             H2F histo = geom.getH2F();
-            histo.setTitle("ANGLE = " + angle.toString());
+            histo.setTitle("ANGLE = " + angle.toString() 
+                    + " VERTEX = " + String.format("%.3f", geom.getVertex()));
             c1.cd(i);
             c1.draw(histo);
         }
