@@ -34,16 +34,34 @@
 #include <unistd.h>
 #include <zlib.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <random>
 #include <sstream>
+#include <iomanip>
 using namespace std;
 
-int main( int narg, char *argv[])
+
+double hit_efficiency = 1.00; // per pixel efficiency
+uint8_t HIT_COLOR = 0x00;
+uint8_t OFF_COLOR = 0xff;
+
+//--------------------------------------
+// MakeDataset
+//--------------------------------------
+void MakeDataset(string dirname, int Nevents)
 {
+	mkdir( dirname.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH );
+
+	string imgfname = dirname+"/images.raw.gz";
+	auto gzf = gzopen( imgfname.c_str(), "wb" );
+	ofstream ofs( (dirname+"/track_parms.csv").c_str() );
+
+	// Labels file header
+	ofs << "filename,phi,phi_calc,phi_regression,sigma_regression" << endl;
 
 	// Image parameters and buffer allocation
 	int width  = 36;
@@ -53,7 +71,7 @@ int main( int narg, char *argv[])
 	for(uint32_t irow=0; irow<height; irow++){
 		row_pointrs.push_back( &buff[irow*width] );
 	}
-	
+
 	// x-locations of planes relative to vertex
 	vector<double> xplane;
 	double x = 30.0; // position of first plane
@@ -65,60 +83,127 @@ int main( int narg, char *argv[])
 		x += 49.0; // already pushed to 1 past last plane of previous group
 	}
 
-	auto gzf = gzopen("images.raw.gz", "wb");
-	ofstream ofs("track_parms.csv");
-
-	// Labels file header
-	ofs << "filename,phi" << endl;
-
 	// Setup random number generator for phi
 	std::random_device rd;  //Will be used to obtain a seed for the random number engine
 	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 	std::uniform_real_distribution<> phi_dis(-10.0, 10.0); // degrees
 	std::uniform_real_distribution<> n_dis(0.0, 1.0);
-	
-	double hit_efficiency = 0.90; // per pixel efficiency
-	
-	int Nimages = 50000;
-	if(narg>1) Nimages = atoi(argv[1]);
-	for(int ievent=0;ievent<Nimages; ievent++){
+
+	// Randomly shift each layer in y by a number between 3 and 97 
+	// (generate these only on firsat call so all set use the same!)
+	static vector<int> shifts;
+	if( shifts.empty() ){
+//		for(auto x : xplane) shifts.push_back( (int)(3.0 + 94.0*n_dis(gen)) );
+		for(auto x : xplane) shifts.push_back( 0 );
+		cout << "shifts: ";
+		for( auto s : shifts ) cout << s << ", ";
+		cout << endl;
+	}
+
+	// Loop over events	
+	for(int ievent=0;ievent<Nevents; ievent++){
 		
 		// select random phi and y-offset
 		auto phi = phi_dis(gen);
 
 		// initialize everything as white
-		memset(buff, 0xff, width*height);
+		memset(buff, OFF_COLOR, width*height);
 		
-		// Find track intersection point with each plane and
-		// set pixels
+		// Find track intersection point with each plane and set pixels.
+		// We also calculate the sums needed for a linear regression of
+		// the measurement points (wire positions) so we can calculate
+		// slope and its uncertainty.
 		double m = tan(phi/57.29578);
+		double wsum = 0.0;
+		double nsum = 0.0;
+		double S=0.0, Sx=0.0, Sy=0.0, Sxx=0.0, Sxy=0.0;
 		for(int igplane=0; igplane<xplane.size(); igplane++){ // igplane=0-35
-			double y = m*xplane[igplane];
+			double x = xplane[igplane];
+			double y = m*x;
 			int icol = igplane;          // 0-35
 			int irow = floor(50.0 + y);  // 0-100
+			
+			// shift planes to break obvious patterns
+			int shift = shifts[igplane];
+			int irow_shifted = (irow+shift)%height;
+			
 			if( (icol>=width ) || (icol<0) ) break;
 			if( (irow>=height) || (irow<0) ) break;
 			if( n_dis(gen) > hit_efficiency ) continue;
-			row_pointrs[irow][igplane] = 0;
+			row_pointrs[irow_shifted][igplane] = HIT_COLOR;
+			
+			// For weighted average
+			double y_bin_center = floor(y) + 0.5;
+			double dy = 1.0/sqrt(12.0); // error on position of single wire measurement
+			double dphi = x*dy/(x*x + y_bin_center*y_bin_center);
+			double w = 1.0/(dphi*dphi);
+			wsum += w;
+			nsum += w*atan2(y_bin_center, x)*57.29578;
+			
+			// For linear regression
+			w = 1.0/(dy*dy);
+			S   += w;
+			Sx  += w*x;
+			Sy  += w*y_bin_center;
+			Sxx += w*x*x;
+			Sxy += w*x*y_bin_center;
 		}
+		double phi_calc = nsum/wsum; // calculated phi from weighted average
+		
+		// calculated phi and uncertainty from linear regression
+		double Delta = (S*Sxx) - (Sx*Sx);
+		double slope = Sxy/Sxx;
+		double sigma_slope = sqrt(fabs(1.0/Sxx));
+		double phi_regression = atan(slope);
+		double sigma_phi_regression = sigma_slope*pow( cos(phi_regression), 2.0 );
+		phi_regression *= 57.29578;
+		sigma_phi_regression *= 57.29578;
 
 		gzwrite( gzf, buff, width*height );
 
 		// Write to labels file
 		char fname[256];
 		sprintf( fname, "img%06d.png", ievent );
-		ofs << fname << "," << phi << endl;
-		
+		ofs << fname << ", " << std::setprecision(9) << phi << ", " << phi_calc << ", " << phi_regression << ", " << sigma_phi_regression << endl;
+
+		// Format is filename (not really used), true phi, calculated phi
+		// The calculated phi is a weighted average for hit-based information.
+		// It should represent the best possible answer for phi given the
+		// information in the image. The difference between that and the true
+		// phi gives the expected error.
 		if( (ievent%100)== 0 ){
-			cout << "   " << ievent << "/" << Nimages << " images written       \r";
+			cout << "   " << ievent << "/" << Nevents << " images written to " << imgfname << "      \r";
 			cout.flush(); 
 		}
 	}
 	
-	cout << endl;
+	cout << "   " << Nevents << "/" << Nevents << " images written to " << imgfname << "      " << endl;
 	
 	ofs.close();
 	gzclose( gzf );
+	delete[] buff;
+}
+
+
+//--------------------------------------
+// main
+//--------------------------------------
+int main( int narg, char *argv[] )
+{
+	int Nimages = 100000;
+	if(narg>1) Nimages = atoi(argv[1]);
+
+	// Setup random number generator for phi
+	std::random_device rd;  //Will be used to obtain a seed for the random number engine
+	std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+	std::uniform_real_distribution<> phi_dis(-10.0, 10.0); // degrees
+	std::uniform_real_distribution<> n_dis(0.0, 1.0);
+
+	
+	// Make all data sets (TEST and VALIDATION sets only have 1/10 events of TRAIN)
+	MakeDataset( "TRAIN", Nimages );
+	MakeDataset( "VALIDATION", Nimages/10 );
+	MakeDataset( "TEST", Nimages/10 );
 
 	return 0;
 }

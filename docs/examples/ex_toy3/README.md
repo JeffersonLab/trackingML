@@ -27,34 +27,17 @@ means most wires in the first layer will never have a hit. The angle
 is the only label to train to and is written to the track_parms.csv
 file in degrees.
 
-The network here uses a classification technique to fill 200 outputs
-corresponding to -10 to +10 degrees in 0.1 degree increments. A custom
-loss function is used to take a weighted average of the 200 outputs
-as the angle. It does the same thing for the label (which is just an
-array with 199 zeros and 1 one). This limits the resolution to the
-bin size/sqrt(12) or 0.029. 
+The network here outputs 60 values corresponding to -12 to +12
+degrees in 0.4 degree increments. A custom loss function is used
+to take a weighted average of the 60 outputs as the angle. It also
+has a term in the loss function that can force the outputs to form
+a Gaussian shape. A parameter can be adjusted to change the
+balanace between the two.
 
-Images can be created with the mkphiimages program. You'll need
-to create both a training and validation set. You may optionally want
-to create a test set. Here are the steps:
-
-scons
-
-mkdir TRAIN VALIDATION TEST
-
-cd TRAIN
-
-../mkphiimages
-
-cd ../VALIDATION
-
-../mkphiimages
-
-cd ../TEST
-
-../mkphiimages
-
-cd ..
+Images can be created with the mkimages program which can be
+compiled with scons. It will create 3 directories: TRAIN, TEST, and
+VALIDATION. Each of them will contiain 2 files: images.raw.gz and
+track_parms.csv. 
 
 The format of the images.raw.gz file is the same as in ex_toy2, but 
 with a different image size. If you wish to see a few examples of the
@@ -69,10 +52,6 @@ to set how many it should use. Note that at this time, I have not
 tested this on a computer without any GPUs so it may not work correctly.
 
 Once the network is trained, you can run the test.py script to run it
-on the TEST data set. This will produce two ascii files used by the
-plot_results.C and plot_outputs.C root macros. The first of these will
-make a pair of plots showing the resolution achieved by the model. The
-second will make a 2D plot of the first 100 tracks so you can see the
-distribution of outputs.
-
+on the TEST data set. This will produce a couple of plots using
+matplotlib so that will need to be installed.
 
