@@ -204,6 +204,10 @@ bins = np.linspace(-0.2, 0.2, 201)
 
 # First, define the figure which consists of two plots, side by side
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 4))
+ax1.grid()
+ax2.grid()
+ax1.set_facecolor((0.9,0.9,0.99))
+ax2.set_facecolor((0.9,0.9,0.99))
 
 # Create histograms and save bin contents and definitions for fitting later
 n_wavg, bins_wavg, p_wavg = ax1.hist(diff_wavg, bins, alpha=0.5, label='weighted avg.', color='blue')
@@ -249,13 +253,29 @@ sigmas_gaus[sigmas_gaus==0.0] = 1.0E6
 # bin centers
 bins_calc = bins_calc[:-1] + 0.5*(bins_calc[1]-bins_calc[0])
 
+
 # Do the weighted fit
 try:
-  popt_calc, pcov = curve_fit(fgaus, bins_calc, n_calc, (np.amax(n_calc), 0.0, 0.015), sigma=sigmas_calc, absolute_sigma=True)
-  popt_wavg, pcov = curve_fit(fgaus, bins_calc, n_wavg, (np.amax(n_wavg), 0.0, 0.030), sigma=sigmas_wavg, absolute_sigma=True)
-  popt_gaus, pcov = curve_fit(fgaus, bins_calc, n_gaus, (np.amax(n_gaus), 0.0, 0.150), sigma=sigmas_gaus, absolute_sigma=True)
-except:
-  pass
+	popt_calc, pcov = curve_fit(fgaus, bins_calc, n_calc, (np.amax(n_calc), 0.0, 0.015), sigma=sigmas_calc, absolute_sigma=True)
+except Exception as E:
+	print('Exception  thrown while curve fitting calc.')
+	print(E)
+	print(bins_calc)
+	print(n_calc)
+try:
+	popt_wavg, pcov = curve_fit(fgaus, bins_calc, n_wavg, (np.amax(n_wavg), 0.0, 0.030), sigma=sigmas_wavg, absolute_sigma=True)
+except Exception as E:
+	print('Exception  thrown while curve fitting wavg.')
+	print(E)
+	print(bins_calc)
+	print(n_wavg)
+try:
+	popt_gaus, pcov = curve_fit(fgaus, bins_calc, n_gaus, (np.amax(n_gaus), 0.0, 0.150), sigma=sigmas_gaus, absolute_sigma=True)
+except Exception as E:
+	print('Exception  thrown while curve fitting gaus.')
+	print(bins_calc)
+	print(n_gaus)
+	print(E)
 
 # Plot curve
 fit_calc = scipy.stats.norm.pdf(bins_calc, popt_calc[1], popt_calc[2])*popt_calc[0]*(math.sqrt(2.0*math.pi)*popt_calc[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
@@ -271,6 +291,10 @@ ax1.text(0.10, 0.55*popt_calc[0], '$\sigma_{wavg}$ = %5.4f$^o$' %  popt_wavg[2],
 ax1.text(0.10, 0.40*popt_calc[0], '$\sigma_{gaus}$  = %5.4f$^o$' %  popt_gaus[2], fontsize=15)
 
 print('unweighted fit results: sigma_opti=%f  sigma_wavg=%f  sigma_gauss=%f' % (sigma_calc, sigma_wavg, sigma_gauss) )
-print('Model saved: ' + model_saved_time_str )
+print('Model used was saved on: ' + model_saved_time_str )
 
 fig.show()
+imgfname = 'resolution_epoch%03d.png' % epoch_loaded
+plt.savefig(imgfname)
+print('Saved plot to: %s' % imgfname) 
+plt.waitforbuttonpress()
