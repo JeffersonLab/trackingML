@@ -6,20 +6,22 @@
 # This assumes the VM was created with CentOS 7 as the OS.
 # The user should be able to run sudo without a password.
 #
+# git clone https://github.com/JeffersonLab/trackingML
+#
 
 # Install CUDA (plus others)
-curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1810/x86_64/cuda-repo-ubuntu1810_10.1.105-1_amd64.deb
-sudo apt -y install ./cuda-repo-ubuntu1810_10.1.105-1_amd64.deb
-sudo apt-key adv --fetch-keys  https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1810/x86_64/7fa2af80.pub
+curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-repo-ubuntu1804_10.1.105-1_amd64.deb
+sudo apt -y install ./cuda-repo-ubuntu1804_10.1.105-1_amd64.deb
+sudo apt-key adv --fetch-keys  https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 sudo apt-get update
 sudo apt-get -y install cuda python3-venv scons
 
 # Download and install cuDNN library
 curl -O https://www.jlab.org/12gev_phys/ML/CUDA/libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
-sudo apt -y libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
+sudo apt -y install ./libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
 
 # Create virtual python environment and install needed packages into it
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python
 
