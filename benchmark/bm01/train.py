@@ -40,9 +40,9 @@ import tensorflow as tf
 
 width  = 36
 height = 100
-EPOCHS = 1000
+EPOCHS = 10
 BS     = 2000
-GPUS   = 0
+GPUS   = 1
 Nouts  = 60
 
 XMIN   = -12.0
