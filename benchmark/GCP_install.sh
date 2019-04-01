@@ -14,7 +14,7 @@ curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_
 sudo apt -y install ./cuda-repo-ubuntu1804_10.0.130-1_amd64.deb
 sudo apt-key adv --fetch-keys  https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 sudo apt-get update
-sudo apt-get -y install cuda python3-venv scons
+sudo apt-get -y install cuda-runtime-10-0 python3-venv scons zlib1g-dev
 
 # Download and install cuDNN library
 curl -O https://www.jlab.org/12gev_phys/ML/CUDA/libcudnn7_7.5.0.56-1+cuda10.0_amd64.deb
