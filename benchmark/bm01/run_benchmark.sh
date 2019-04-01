@@ -9,11 +9,11 @@
 # of GPUs available on the VM
 #
 # This will run the benchmark and copy all relevant info
-# into the archive bm01_results.tgz
+# into the archive bm01_{hostname}.tgz
 #
 
 # Make directory to hold results
-results_dir=bm01_results
+results_dir=bm01_`hostname`
 mkdir $results_dir
 
 # Build mkimages program and run it
