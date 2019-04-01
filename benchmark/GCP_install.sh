@@ -7,17 +7,35 @@
 # The user should be able to run sudo without a password.
 #
 
-# Install CUDA
-sudo yum install -y wget
-wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.1.105-1.x86_64.rpm
-sudo rpm -i cuda-repo-*.rpm
-sudo yum install -y cuda
+# Install CUDA (plus others)
+curl -O https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1810/x86_64/cuda-repo-ubuntu1810_10.1.105-1_amd64.deb
+sudo apt -y install ./cuda-repo-ubuntu1810_10.1.105-1_amd64.deb
+sudo apt-key adv --fetch-keys  https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1810/x86_64/7fa2af80.pub
+sudo apt-get update
+sudo apt-get -y install cuda python3-venv scons
 
-# Install python3 and C++ compiler
-sudo yum install python3 gcc-g++
+# Download and install cuDNN library
+curl -O https://www.jlab.org/12gev_phys/ML/CUDA/libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
+sudo apt -y libcudnn7_7.5.0.56-1+cuda10.1_amd64.deb
 
 # Create virtual python environment and install needed packages into it
-pyvenv venv
+python -m venv venv
 source venv/bin/activate
-sudo pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python
+pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python
 
+
+
+# Install CUDA (also install python3 and c++ compiler)
+#sudo yum install -y wget
+#wget https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-10.1.105-1.x86_64.rpm
+#sudo rpm -i cuda-repo-*.rpm
+#sudo yum install -y cuda scons
+
+# Create virtual python environment and install needed packages into it
+#python3.6 -m venv venv
+#source venv/bin/activate
+#pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python
+
+# Download and install cuDNN library
+#wget https://www.jlab.org/12gev_phys/ML/CUDA/libcudnn7-7.4.2.24-1.cuda10.0.x86_64.rpm
+#sudo rpm -i libcudnn7-7.4.2.24-1.cuda10.0.x86_64.rpm
