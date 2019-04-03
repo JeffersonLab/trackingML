@@ -130,6 +130,7 @@ diff_calc  = np.zeros(NTEST)
 
 # Loop over test samples
 print ('Looping through test events ...')
+itf = open('inference_time.dat', 'w')
 start_time = time.time()
 for i in range(0, NTEST):
 	(x,y) = next(test_generator)
@@ -196,8 +197,10 @@ for i in range(0, NTEST):
 		percent_done = 100.0*float(i)/float(NTEST)
 		sys.stdout.write('\r %3.1f%% %d/%d written  %3.3f ms per inference' % (percent_done ,  i, NTEST, t_inference))
 		sys.stdout.flush()
+		itf.write('%d %3.3f' % (i, t_inference)) # write to inference times file
 		start_time = time.time()
 print('\nDone')
+itf.close()
 
 #------------ Make plots of results
 bins = np.linspace(-0.2, 0.2, 201)

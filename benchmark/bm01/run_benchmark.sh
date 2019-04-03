@@ -26,14 +26,29 @@ free              > $results_dir/memory.out
 nvidia-smi        > $results_dir/nvidia-smi.out
 uname             > $results_dir/uname.out
 
+#-------------------------------------------------------------------
+# Capture GPU stats while training
+nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out
+
 # Run training
 ./train.py &> $results_dir/train.out
+
+# Kill nvidia-smi monitoring
+pkill -9 nvidia-smi
+
+#-------------------------------------------------------------------
+# Capture GPU stats while testing
+nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out
 
 # Run testing
 ./test.py  &> $results_dir/test.out
 
+# Kill nvidia-smi monitoring
+pkill -9 nvidia-smi
+
+#-------------------------------------------------------------------
 # Move tensorboard logs and results images to results dir
-mv logs *.png $results_dir
+mv logs *.png *.dat $results_dir
 
 # Tar and gzip results dir
 tar czf ${results_dir}.tgz $results_dir
