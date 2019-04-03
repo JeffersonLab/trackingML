@@ -28,7 +28,7 @@ uname             > $results_dir/uname.out
 
 #-------------------------------------------------------------------
 # Capture GPU stats while training
-nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out
+nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out &
 
 # Run training
 ./train.py &> $results_dir/train.out
@@ -38,7 +38,7 @@ pkill -9 nvidia-smi
 
 #-------------------------------------------------------------------
 # Capture GPU stats while testing
-nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out
+nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-test.out &
 
 # Run testing
 ./test.py  &> $results_dir/test.out
