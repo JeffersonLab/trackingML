@@ -300,4 +300,4 @@ fig.show()
 imgfname = 'resolution_epoch%03d.png' % epoch_loaded
 plt.savefig(imgfname)
 print('Saved plot to: %s' % imgfname) 
-plt.waitforbuttonpress()
+#plt.waitforbuttonpress()
