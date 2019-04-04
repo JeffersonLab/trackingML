@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Run the bm01 benchmark
+# Run the bm02 benchmark
 #
 # This script should be run from within the bm01 directory
 # *AFTER* sourcing the python virtual environment script
@@ -13,7 +13,7 @@
 #
 
 # Make directory to hold results
-results_dir=bm01_`hostname`
+results_dir=bm02_`hostname`
 mkdir $results_dir
 
 # Build mkimages program and run it
