@@ -146,7 +146,6 @@ for epoch_loaded in range(2000, -1, -1): # there is probably a more efficient wa
 
 if epoch_loaded > 0:
 	print('Loading model: ' + fname)
-	keras.losses.customLoss = customLoss
 	model = load_model( fname )
 else:
 	print('Unable to find saved model. Will start from scratch')
