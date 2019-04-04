@@ -26,7 +26,7 @@ free              > $results_dir/memory.out
 nvidia-smi        > $results_dir/nvidia-smi.out
 uname             > $results_dir/uname.out
 sysbench cpu run  > $results_dir/sysbench.out
-sudo stress-ng --cpu 1 --cpu-method all --perf -t 60 > $results_dir/stress-ng.out
+sudo stress-ng --cpu 1 --cpu-method all --perf -t 60 &> $results_dir/stress-ng.out
 
 #-------------------------------------------------------------------
 # Capture GPU stats while training
