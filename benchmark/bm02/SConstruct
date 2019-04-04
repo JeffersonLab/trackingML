@@ -1,0 +1,7 @@
+
+env = Environment()
+
+env.AppendUnique(CXXFLAGS=['-std=c++11'])
+env.AppendUnique(LIBS=['z'])
+
+env.Program(['mkimages.cc'])
