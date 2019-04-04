@@ -5,5 +5,5 @@ function instead of the custom loss function used in bm01.
 
 
 inputs:  36x100 pixel image
-network: CONV  1.1M parameters
+network: CONV  17k parameters
 
