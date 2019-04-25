@@ -23,7 +23,7 @@ sudo apt -y install ./libcudnn7_7.5.0.56-1+cuda10.0_amd64.deb
 # Create virtual python environment and install needed packages into it
 python3 -m venv venv
 source venv/bin/activate
-pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python
+pip install keras tensorflow-gpu pandas matplotlib imutils pillow scikit-learn opencv-python sklearn
 
 
 
