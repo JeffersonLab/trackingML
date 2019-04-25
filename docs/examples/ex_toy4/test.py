@@ -158,7 +158,8 @@ for i in range(0, NTEST):
 print('\nDone')
 
 #------------ Make plots of results
-bins = np.linspace(-0.2, 0.2, 201)
+bins_def_phi = np.linspace(-0.2, 0.2, 201)
+bins_def_z   = np.linspace(-10.0, 10.0, 201)
 
 # First, define the figure which consists of two plots, side by side
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 4))
@@ -168,23 +169,18 @@ ax1.set_facecolor((0.9,0.9,0.99))
 ax2.set_facecolor((0.9,0.9,0.99))
 
 # Create histograms and save bin contents and definitions for fitting later
-n_wavg, bins_wavg, p_wavg = ax1.hist(diff_wavg, bins, alpha=0.5, label='weighted avg.', color='blue')
-n_gaus, bins_gaus, p_gaus = ax1.hist(diff_gauss, bins, alpha=0.5, label='gauss', color='red')
-n_calc, bins_calc, p_calc = ax1.hist(diff_calc, bins, alpha=0.5, label='optimal', color='black')
+n_phi, bins_phi, p_phi = ax1.hist(diff_phi, bins_def_phi, alpha=0.5, label='phi', color='blue')
+n_z  , bins_z  , p_z   = ax2.hist(diff_z  , bins_def_z  , alpha=0.5, label='z'  , color='red')
 ax1.legend(loc='upper right')
-ax1.set_title('Resolution after %d epochs' % epoch_loaded)
-
-ax2.scatter(phis_truth, phis_wavg, marker='.', alpha=0.5, label='weighted avg.', color='blue')
-ax2.scatter(phis_truth, phis_gauss, marker='.', alpha=0.5, label='gauss', color='red')
-ax2.legend(loc='upper left')
-ax2.set_title('Correlation after %d epochs' % epoch_loaded)
-ax2.set_xlabel('phi truth (degrees)')
-ax2.set_ylabel('phi model (degrees)')
+ax2.legend(loc='upper right')
+ax1.set_title('$\phi$ Resolution after %d epochs' % epoch_loaded)
+ax2.set_title('$z$ Resolution after %d epochs' % epoch_loaded)
+ax1.set_xlabel('$\delta\phi$ (degrees)')
+ax2.set_xlabel('$\delta z$ (cm)')
 
 # Simple, unweighted gaussian fit
-(mu, sigma_calc) = scipy.stats.norm.fit(diff_calc)
-(mu, sigma_wavg) = scipy.stats.norm.fit(diff_wavg)
-(mu, sigma_gauss) = scipy.stats.norm.fit(diff_gauss)
+(mu, sigma_phi) = scipy.stats.norm.fit(diff_phi)
+(mu, sigma_z  ) = scipy.stats.norm.fit(diff_z  )
 
 #---- Fit gaussian with 1/sqrt(N) bin uncertainty
 #---- There must be a simpler way to do this!
@@ -197,59 +193,48 @@ def fgaus(x, A, x0, sigma):
     return A * np.exp( -(delta**2)/2.0 )
 
 # Calculate sigmas for each bin
-sigmas_calc = np.sqrt(n_calc)
-sigmas_wavg = np.sqrt(n_wavg)
-sigmas_gaus = np.sqrt(n_gaus)
+sigmas_phi = np.sqrt(n_phi)
+sigmas_z   = np.sqrt(n_z  )
 
 # Prevent division by zero by making all empty bins have huge sigmas
-sigmas_calc[sigmas_calc==0.0] = 1.0E6
-sigmas_wavg[sigmas_wavg==0.0] = 1.0E6
-sigmas_gaus[sigmas_gaus==0.0] = 1.0E6
+sigmas_phi[sigmas_phi==0.0] = 1.0E6
+sigmas_z[sigmas_z==0.0] = 1.0E6
 
 # The array returned from the hist method above are the bin edges so
 # contain number of bins+1 elements. Convert to array with values at
 # bin centers
-bins_calc = bins_calc[:-1] + 0.5*(bins_calc[1]-bins_calc[0])
+bins_phi = bins_phi[:-1] + 0.5*(bins_phi[1]-bins_phi[0])
+bins_z   = bins_z[:-1] + 0.5*(bins_z[1]-bins_z[0])
 
 
 # Do the weighted fit
 try:
-	popt_calc, pcov = curve_fit(fgaus, bins_calc, n_calc, (np.amax(n_calc), 0.0, 0.015), sigma=sigmas_calc, absolute_sigma=True)
+	popt_phi, pcov = curve_fit(fgaus, bins_phi, n_phi, (np.amax(n_phi), 0.0, 0.015), sigma=sigmas_phi, absolute_sigma=True)
 except Exception as E:
-	print('Exception  thrown while curve fitting calc.')
+	print('Exception  thrown while curve fitting phi.')
 	print(E)
-	print(bins_calc)
-	print(n_calc)
+	print(bins_phi)
+	print(n_phi)
 try:
-	popt_wavg, pcov = curve_fit(fgaus, bins_calc, n_wavg, (np.amax(n_wavg), 0.0, 0.030), sigma=sigmas_wavg, absolute_sigma=True)
+	popt_z, pcov = curve_fit(fgaus, bins_z, n_z, (np.amax(n_z), 0.0, 0.030), sigma=sigmas_z, absolute_sigma=True)
 except Exception as E:
-	print('Exception  thrown while curve fitting wavg.')
+	print('Exception  thrown while curve fitting z.')
 	print(E)
-	print(bins_calc)
-	print(n_wavg)
-try:
-	popt_gaus, pcov = curve_fit(fgaus, bins_calc, n_gaus, (np.amax(n_gaus), 0.0, 0.150), sigma=sigmas_gaus, absolute_sigma=True)
-except Exception as E:
-	print('Exception  thrown while curve fitting gaus.')
-	print(bins_calc)
-	print(n_gaus)
-	print(E)
+	print(bins_z)
+	print(n_z)
 
 # Plot curve
-fit_calc = scipy.stats.norm.pdf(bins_calc, popt_calc[1], popt_calc[2])*popt_calc[0]*(math.sqrt(2.0*math.pi)*popt_calc[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
-fit_wavg = scipy.stats.norm.pdf(bins_calc, popt_wavg[1], popt_wavg[2])*popt_wavg[0]*(math.sqrt(2.0*math.pi)*popt_wavg[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
-fit_gaus = scipy.stats.norm.pdf(bins_calc, popt_gaus[1], popt_gaus[2])*popt_gaus[0]*(math.sqrt(2.0*math.pi)*popt_gaus[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
-ax1.plot(bins_calc, fit_calc, 'k', linewidth=2, color='black')
-ax1.plot(bins_calc, fit_wavg, 'k', linewidth=2, color='blue')
-ax1.plot(bins_calc, fit_gaus, 'k', linewidth=2, color='red')
+fit_phi = scipy.stats.norm.pdf(bins_phi, popt_phi[1], popt_phi[2])*popt_phi[0]*(math.sqrt(2.0*math.pi)*popt_phi[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
+fit_z   = scipy.stats.norm.pdf(bins_z, popt_z[1], popt_z[2])*popt_z[0]*(math.sqrt(2.0*math.pi)*popt_z[2]) # norm properly normalizes gaussian so we need to remove that and apply amplitude parameter
+ax1.plot(bins_phi, fit_phi, 'k', linewidth=2, color='black')
+ax2.plot(bins_z, fit_z, 'k', linewidth=2, color='blue')
 
 # Draw fit resolutions on plot
-ax1.text(0.10, 0.70*popt_calc[0], '$\sigma_{opti}$   = %5.4f$^o$' %  popt_calc[2], fontsize=15)
-ax1.text(0.10, 0.55*popt_calc[0], '$\sigma_{wavg}$ = %5.4f$^o$' %  popt_wavg[2], fontsize=15)
-ax1.text(0.10, 0.40*popt_calc[0], '$\sigma_{gaus}$  = %5.4f$^o$' %  popt_gaus[2], fontsize=15)
+ax1.text(0.10, 0.70*popt_phi[0], '$\sigma_{\phi}$   = %5.4f$^o$' %  popt_phi[2], fontsize=15)
+ax2.text(0.10, 0.55*popt_z[0], '$\sigma_{z}$ = %5.4f cm' %  popt_z[2], fontsize=15)
 
-print('unweighted fit results: sigma_opti=%f  sigma_wavg=%f  sigma_gauss=%f' % (sigma_calc, sigma_wavg, sigma_gauss) )
-print('Model used was saved on: ' + model_saved_time_str )
+#print('unweighted fit results: sigma_opti=%f  sigma_wavg=%f  sigma_gauss=%f' % (sigma_calc, sigma_wavg, sigma_gauss) )
+#print('Model used was saved on: ' + model_saved_time_str )
 
 fig.show()
 imgfname = 'resolution_epoch%03d.png' % epoch_loaded
