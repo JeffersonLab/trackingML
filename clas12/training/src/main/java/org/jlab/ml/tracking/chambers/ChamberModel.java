@@ -28,7 +28,7 @@ public class ChamberModel {
         
         ConvolutionLayer layer0 = new ConvolutionLayer.Builder(3,3)
         .nIn(1)
-        .nOut(4)
+        .nOut(16)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -37,8 +37,8 @@ public class ChamberModel {
         .build();
         
         ConvolutionLayer layer1 = new ConvolutionLayer.Builder(3,3)
-        .nIn(4)
-        .nOut(4)
+        .nIn(16)
+        .nOut(16)
         .stride(1,1)
         .padding(1,1)
         .weightInit(WeightInit.XAVIER)
@@ -60,12 +60,12 @@ public class ChamberModel {
                 .build();
    */
  
-      DenseLayer    dense = new DenseLayer.Builder().nOut(1024)
+      DenseLayer    dense = new DenseLayer.Builder().nOut(120)
               .activation(Activation.TANH).build();
       
       OutputLayer   layerOut = new OutputLayer.Builder()
                 .lossFunction(LossFunctions.LossFunction.MSE)
-                .nOut(2)
+                .nOut(1)
                 .activation(Activation.IDENTITY)
                 .build();
       

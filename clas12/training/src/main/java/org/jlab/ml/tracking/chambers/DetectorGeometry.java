@@ -18,7 +18,7 @@ import org.jlab.jnp.geom.prim.Path3D;
  */
 public class DetectorGeometry {
     
-    private double[] chamberPositions = new double[]{20.0,40.0,60.0,80.0,100.0,120.0};
+    private double[] chamberPositions = new double[]{30.0,80.0,130.0,180.0,230.0,280.0};
     private double   layerWidth       = 18.0;
     private double   wireLength       = 30.0;
     private double[][] chamberBuffer  = new double[36][112];
@@ -106,8 +106,8 @@ public class DetectorGeometry {
             double dist = getDistance(path,layer,index);
             //System.out.println(String.format("%5d %5d distance = %8.5f", 
             //        layer,index,dist));
-            //if(dist<0.99) chamberBuffer[layer][index] = 1.0;
-            if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
+            if(dist<0.99) chamberBuffer[layer][index] = 1.0;
+            //if(dist<0.99) chamberBuffer[layer][index] = 1.0-dist;
         }
     }
     
@@ -164,12 +164,12 @@ public class DetectorGeometry {
         DetectorGeometry  geom = new DetectorGeometry();
         geom.setAngle(-22);
         geom.processStraight();
-        geom.setVertex(-5, 0);
+        geom.setVertex(0, 0);
         TCanvas c1 = new TCanvas("c1",500,500);
         
         c1.divide(4, 4);
         for(int i = 0; i < 16; i++){
-            Integer angle = -15;//-10+i;
+            Integer angle = 0+i;//-10+i;
             geom.setAngle(angle);
             geom.processStraight();
             H2F histo = geom.getH2F();

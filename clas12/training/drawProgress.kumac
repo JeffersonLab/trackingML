@@ -1,0 +1,20 @@
+canvas/clear
+canvas/zone 4 1
+#---------------------------------------------------------
+ntuple/read a:b:ar:br ccnet/network_eval_500.txt network_eval_500.hipo
+ntuple/open 9 network_eval_500.hipo
+ntuple/plot 9.a-ar ! ! ! 100 -0.5 0.5
+#---------------------------------------------------------
+ntuple/read a:b:ar:br ccnet/network_eval_2000.txt network_eval_2000.hipo
+ntuple/open 10 network_eval_2000.hipo
+ntuple/plot 10.a-ar ! ! ! 100 -0.5 0.5
+#---------------------------------------------------------
+ntuple/read a:b:ar:br ccnet/network_eval_6000.txt network_eval_6000.hipo
+ntuple/open 11 network_eval_6000.hipo
+ntuple/plot 11.a-ar ! ! ! 100 -0.5 0.5
+#---------------------------------------------------------
+#---------------------------------------------------------
+ntuple/read a:b:ar:br ccnet/network_eval_12000.txt network_eval_12000.hipo
+ntuple/open 12 network_eval_12000.hipo
+ntuple/plot 12.a-ar ! ! ! 100 -0.5 0.5
+#---------------------------------------------------------

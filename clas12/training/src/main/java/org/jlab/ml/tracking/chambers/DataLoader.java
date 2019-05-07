@@ -65,7 +65,7 @@ public class DataLoader {
     
     public INDArray getOutputArrayOne(){
         int outSize = detectorHits.size();
-        int bins    = 2;
+        int bins    = 1;
         int[] inputs = new int[]{outSize,bins};
         Axis  theta  = new Axis(bins,-25.0,25.0);
         int   bufferLength = outSize*bins;
@@ -76,9 +76,27 @@ public class DataLoader {
             double value = (10 + geom.getAngle())/20.0;
             double z     = (geom.getVertex()+5.0)/5.0;
             ind.putScalar(i, 0, value);
-            ind.putScalar(i, 1, z);
+            //ind.putScalar(i, 1, z);
+            System.out.println(String.format("%5d %8.5f %8.5f", i, value,z));
         }
         return ind;
+    }
+    
+     public void generateH(int samples){
+        
+        for(int i = 0; i < samples; i++){
+            //double angle = Math.random()*20.0-10.0;
+            double angle  = Math.random()*4.5 + 4.5;
+            double signR  = Math.random();
+            double sign   = 1;
+            if(signR<0.5) sign= -1;
+            DetectorGeometry geom = new DetectorGeometry();
+            geom.setVertex(0.0, 0.0);
+            geom.setAngle(angle*sign);
+            geom.reset();
+            geom.processStraight(angle*sign);
+            detectorHits.add(geom);
+        }
     }
     
     public void generate(int samples){
@@ -87,7 +105,7 @@ public class DataLoader {
             //double angle = Math.random()*20.0-10.0;
             double angle = Math.random()*18.0-9.0;
             DetectorGeometry geom = new DetectorGeometry();
-            geom.setVertex(-5.0, 0.0);
+            geom.setVertex(0.0, 0.0);
             geom.setAngle(angle);
             geom.reset();
             geom.processStraight(angle);

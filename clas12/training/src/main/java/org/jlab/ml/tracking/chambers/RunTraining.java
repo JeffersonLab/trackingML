@@ -6,7 +6,10 @@
 package org.jlab.ml.tracking.chambers;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
@@ -14,6 +17,7 @@ import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.optimize.listeners.TimeIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
+import org.jlab.jnp.readers.TextFileWriter;
 import org.jlab.ml.tracking.clas12.Clas12DataLoader;
 import org.jlab.ml.tracking.clas12.Clas12TrackingModel;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -31,10 +35,28 @@ public class RunTraining {
     private String directory = "cnnet";
     private RunEvaluationOne evaluation = new RunEvaluationOne();
     private MultiLayerNetwork network = null;
+    private Map<Integer,Double> epochScore = new LinkedHashMap<Integer,Double>();
+    
+    
     
     public RunTraining(){ 
     }
     
+    
+    public void saveProgress(int epoch){
+        String name = directory + String.format("/progress_%d.score", epoch);
+        TextFileWriter  writer = new TextFileWriter();
+        writer.open(name);
+        double[] output = new double[2];
+        
+        for(Map.Entry<Integer,Double> entry : epochScore.entrySet()){
+            output[0] = entry.getKey();
+            output[1] = entry.getValue();
+            String strOut = String.format("%e %e", output[0],output[1]);
+            writer.writeString(strOut);
+        }
+        writer.close();
+    }
     public void setDirectory(String outputDir){ 
         directory = outputDir; 
         evaluation.setDirectory(outputDir);
@@ -47,7 +69,7 @@ public class RunTraining {
     public void run(){
         
         DataLoader loader = new DataLoader();
-        loader.generate(nSamples);
+        loader.generateH(nSamples);
         
         INDArray  aInputs = loader.getInputArray(   );
         INDArray aOutputs = loader.getOutputArrayOne(  );
@@ -70,10 +92,11 @@ public class RunTraining {
             double score = network.score();
             System.out.println(String.format(">>> result epoch %8d/%8d score = %.14f time = %8d ms", 
                     epoch,nEpochs, score, elapsed_time));
-            
+            this.epochScore.put(epoch, score);
             if(epoch%saveFrequency==0){
                 System.out.println(">>>> saving network and running evaluation....");
                 saveNetwork(epoch);
+                saveProgress(epoch);
                 evaluation.run(network, epoch, 2000);
             }
         }
@@ -92,8 +115,7 @@ public class RunTraining {
     public static void main(String[] args){
         
         System.out.println("running ML tracking learning algorithm...");
-        
-        
+                
         int  nIterations = Integer.parseInt(args[0]);
         int nDataSamples = Integer.parseInt(args[1]);
         int nSaveFrequency = Integer.parseInt(args[2]);

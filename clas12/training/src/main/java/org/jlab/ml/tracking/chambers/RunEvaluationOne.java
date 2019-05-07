@@ -53,7 +53,7 @@ public class RunEvaluationOne {
                 params[0] = loader.getDetectorHits().get(0).getAngle();
                 params[1] = loader.getDetectorHits().get(0).getVertex();
                 params[2] = output.getDouble(0, 0)*20.0-10.0;
-                params[3] = output.getDouble(0, 1)*5.0-5.0;
+                params[3] = 0.0;//output.getDouble(0, 1)*5.0-5.0;
                 writer.writeDouble(params);
         }
         writer.close();                
