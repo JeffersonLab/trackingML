@@ -13,6 +13,7 @@ import java.util.List;
  * @author gavalian
  */
 public class TrackData {
+    
     private final List<TrackSegment>  segmentsList = new ArrayList<TrackSegment>();
     
     public TrackData(){
