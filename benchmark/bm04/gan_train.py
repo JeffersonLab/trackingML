@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from __future__ import print_function, division
 
 import tensorflow as tf
@@ -25,7 +26,9 @@ import matplotlib.pyplot as plt
 import sys
 import numpy as np
 
-
+BATCH_SIZE = 25
+N_EPOCHS = 100
+GPUS = 1
 
 def get_generator(input_layer):
   print("generator model")
@@ -183,7 +186,9 @@ config = tf.ConfigProto()
 #config = tf.ConfigProto(
 #        device_count = {'GPU': 0}
 #    )
-
+print("running "+str(N_EPOCHS)+" Epochs")
+print("using batch size of "+str(BATCH_SIZE))
+print("running with "+str(GPUS)+" gpus")
 # Don't pre-allocate memory; allocate as-needed
 config.gpu_options.allow_growth = True
 
@@ -193,12 +198,11 @@ config.gpu_options.per_process_gpu_memory_fraction = 0.95
 # Create a session with the above options specified.
 K.tensorflow_backend.set_session(tf.Session(config=config))
 
-BATCH_SIZE = 25
-N_EPOCHS = 10000
-img_height=64#472
-img_width=64#696
+
+img_height=64 #472
+img_width=64 #696
 img_channels=3
-GPUS = 1
+
 
 # GAN creation
 img_input = Input(shape=(img_height,img_width,img_channels))
@@ -279,6 +283,6 @@ for epoch in range(N_EPOCHS):
   #print('\tEpoch: {}, Generator Loss: {}, Discriminator Loss: {}'.format(epoch+1, cum_g_loss/num_batches, cum_d_loss/num_batches))
   #print(epoch+1)
   #print(epoch+1%10)
-  if((epoch+1) % 1 == 0):
+  if((epoch+1) % 10 == 0):
     print("SHOW")
     show_samples("epoch" + str(epoch))
