@@ -47,7 +47,7 @@ pkill -9 nvidia-smi
 nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-test.out &
 
 # Run testing
-./predict_batch.py  &> $results_dir/test.out
+./gan_test.py  &> $results_dir/test.out
 
 # Kill nvidia-smi monitoring
 pkill -9 nvidia-smi

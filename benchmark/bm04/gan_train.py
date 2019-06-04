@@ -286,3 +286,5 @@ for epoch in range(N_EPOCHS):
   if((epoch+1) % 10 == 0):
     print("SHOW")
     show_samples("epoch" + str(epoch))
+
+generator.save("test")
