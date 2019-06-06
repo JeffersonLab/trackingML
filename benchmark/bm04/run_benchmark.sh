@@ -2,20 +2,20 @@
 #
 # Run the bm03 benchmark
 #
-# This script should be run from within the bm03 directory
+# This script should be run from within the bm04 directory
 # *AFTER* sourcing the python virtual environment script
 # venv/bin/activate. One should also make sure the GPUS
 # variable at the top of the script is set to the number
 # of GPUs available on the VM
 #
 # This will run the benchmark and copy all relevant info
-# into the archive bm03_{hostname}.tgz
+# into the archive bm04_{hostname}.tgz
 #
 
 GPUS=1
 
 # Make directory to hold results
-results_dir=bm03_`hostname`
+results_dir=bm04_`hostname`
 mkdir $results_dir
 
 # Download input data and unpack it
