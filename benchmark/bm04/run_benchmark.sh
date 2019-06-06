@@ -22,7 +22,7 @@ mkdir $results_dir
 curl -O https://www.jlab.org/12gev_phys/ML/data_sets/bm03_dataset.tgz
 tar xzf bm03_dataset.tgz
 mkdir ./training_set
-mv ./bm03_dataset/training_set/good/* ./training_set/
+mv ./bm03_dataset/training_set/good ./training_set/
 
 # Capture system info
 cat /proc/cpuinfo > $results_dir/cpuinfo.out
