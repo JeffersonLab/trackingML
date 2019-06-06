@@ -82,7 +82,7 @@ def get_generator(input_layer):
 
   if GPUS<=1 :
     parallel_model = model
-	else:
+  else:
     parallel_model = multi_gpu_model( model, gpus=GPUS )
   
   return parallel_model
