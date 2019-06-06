@@ -17,6 +17,7 @@ GPUS=1
 # Make directory to hold results
 results_dir=bm04_`hostname`
 mkdir $results_dir
+mkdir out_imgs
 
 # Download input data and unpack it
 curl -O https://www.jlab.org/12gev_phys/ML/data_sets/bm03_dataset.tgz

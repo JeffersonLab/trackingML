@@ -36,7 +36,7 @@ def get_generator(input_layer):
   #print(condition_layer.shape)
 
   #merged_input = Concatenate()([input_layer, condition_layer])
-  
+
   hid = Dense(int(128 * img_height * img_width/4), activation='relu')(input_layer)#(merged_input)
   hid = BatchNormalization(momentum=0.9)(hid)
   hid = LeakyReLU(alpha=0.1)(hid)
@@ -76,19 +76,21 @@ def get_generator(input_layer):
   out = Activation("tanh")(hid)
 
   print(out.shape)
+
   model = Model(inputs=[input_layer], outputs=out)
   #model = Model(inputs=[input_layer, condition_layer], outputs=out)
   model.summary()
 
-  if GPUS<=1 :
+  #parrallel_model = model
+  if GPUS<=1:
     parallel_model = model
   else:
     parallel_model = multi_gpu_model( model, gpus=GPUS )
-  
+
   return parallel_model
 
 def get_discriminator(input_layer):
-  
+
   depth = 128
   dropout = 0.1
   #model = InceptionV3(include_top=True, weights=None, input_tensor=input_layer, input_shape=None, pooling=None, classes=1)
@@ -153,7 +155,7 @@ def get_image_batch():
 
   assert img_batch.shape == (BATCH_SIZE, img_height, img_width, img_channels), img_batch.shape
   return img_batch
-  
+
 def show_samples(batchidx):
   #fig, axs = plt.subplots(5, 6, figsize=(img_width))
   #plt.subplots_adjust(hspace=0.3, wspace=0.1)
@@ -225,9 +227,10 @@ gan.add(generator)
 gan.add(discriminator)
 gan.summary()
 if GPUS<=1 :
-    ganparallel_model = gan
+  ganparallel_model = gan
 else:
-    ganparallel_model = multi_gpu_model( gan, gpus=GPUS )
+  ganparallel_model = multi_gpu_model( gan, gpus=GPUS )
+
 ganparallel_model.compile(optimizer=Adam(0.0002, 0.5), loss='binary_crossentropy', metrics=['accuracy'])
 
 # # Get training images
@@ -243,7 +246,7 @@ real_image_generator = data_generator.flow_from_directory(
         **flow_from_directory_params
 )
 
- 
+
 num_batches = int(real_image_generator.n//real_image_generator.batch_size)
 
 
@@ -263,7 +266,6 @@ for epoch in range(N_EPOCHS):
     # We use same labels for generated images as in the real training batch
     generated_images = generator.predict([noise_data])
 
-    
     #images_train = images[np.random.randint(0,images.shape[0], size=BATCH_SIZE), :, :, :]
     x = np.concatenate((images, generated_images))
     y = np.ones([2*BATCH_SIZE, 1])
@@ -283,7 +285,7 @@ for epoch in range(N_EPOCHS):
   #print('\tEpoch: {}, Generator Loss: {}, Discriminator Loss: {}'.format(epoch+1, cum_g_loss/num_batches, cum_d_loss/num_batches))
   #print(epoch+1)
   #print(epoch+1%10)
-  if((epoch+1) % 10 == 0):
+  if((epoch+1) % 1 == 0):
     print("SHOW")
     show_samples("epoch" + str(epoch))
 
