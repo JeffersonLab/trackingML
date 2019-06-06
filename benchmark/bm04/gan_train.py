@@ -120,7 +120,7 @@ def get_discriminator(input_layer):
   model.summary()
   if GPUS<=1 :
     discparallel_model = model
-	else:
+  else:
     discparallel_model = multi_gpu_model( model, gpus=GPUS )
   return discparallel_model
 
@@ -226,7 +226,7 @@ gan.add(discriminator)
 gan.summary()
 if GPUS<=1 :
     ganparallel_model = gan
-	else:
+else:
     ganparallel_model = multi_gpu_model( gan, gpus=GPUS )
 ganparallel_model.compile(optimizer=Adam(0.0002, 0.5), loss='binary_crossentropy', metrics=['accuracy'])
 
