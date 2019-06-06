@@ -37,7 +37,7 @@ sudo stress-ng --cpu 1 --cpu-method all --perf -t 60 &> $results_dir/stress-ng.o
 nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-train.out &
 
 # Run training
-./gan_train.py -m test &> $results_dir/train.out
+python3 ./gan_train.py -m test &> $results_dir/train.out
 
 # Kill nvidia-smi monitoring
 pkill -9 nvidia-smi
@@ -47,7 +47,7 @@ pkill -9 nvidia-smi
 nvidia-smi dmon -o DT -s puct -f $results_dir/nvidia-smi-test.out &
 
 # Run testing
-./gan_test.py  &> $results_dir/test.out
+python3 ./gan_test.py  &> $results_dir/test.out
 
 # Kill nvidia-smi monitoring
 pkill -9 nvidia-smi
