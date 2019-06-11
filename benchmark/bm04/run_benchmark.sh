@@ -16,9 +16,9 @@ GPUS=1
 
 # Make directory to hold results
 results_dir=bm04_`hostname`
-mkdir $results_dir
-mkdir out_imgs
-
+mkdir -p $results_dir
+mkdir -p out_imgs
+mkdir -p logs
 # Download input data and unpack it
 curl -O https://www.jlab.org/12gev_phys/ML/data_sets/bm03_dataset.tgz
 tar xzf bm03_dataset.tgz
@@ -55,7 +55,7 @@ pkill -9 nvidia-smi
 
 #-------------------------------------------------------------------
 # Move tensorboard logs and results images to results dir
-mv logs *.png *.dat $results_dir
+mv logs out_imgs $results_dir
 
 # Tar and gzip results dir
 tar czf ${results_dir}.tgz $results_dir
