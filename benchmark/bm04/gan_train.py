@@ -25,9 +25,10 @@ import matplotlib.pyplot as plt
 
 import sys
 import numpy as np
+import time
 
 BATCH_SIZE = 25
-N_EPOCHS = 100
+N_EPOCHS = 10
 GPUS = 1
 
 def get_generator(input_layer):
@@ -251,6 +252,7 @@ num_batches = int(real_image_generator.n//real_image_generator.batch_size)
 
 
 for epoch in range(N_EPOCHS):
+  start_time=time.time()
   dloss=[0.,0.]
   aloss=[0.,0.]
   for batch_idx in range(num_batches):
@@ -275,18 +277,23 @@ for epoch in range(N_EPOCHS):
     dloss[1]+=d_loss[1]
     y = np.ones([BATCH_SIZE, 1])
     noise = np.random.uniform(-1.0, 1.0, size=[BATCH_SIZE, 100])
+    
     a_loss = gan.train_on_batch(noise, y)
     aloss[0]+=a_loss[0]
     aloss[1]+=a_loss[1]
   log_mesg = "%d: [D loss: %f, acc: %f]" % (epoch, dloss[0], dloss[1]/num_batches)
   log_mesg = "%s  [A loss: %f, acc: %f]" % (log_mesg, aloss[0], aloss[1]/num_batches)
+  end_time=time.time()
+
   print(log_mesg)
-  #print("===================")
+  print(end_time-start_time)
+  print("===================")
   #print('\tEpoch: {}, Generator Loss: {}, Discriminator Loss: {}'.format(epoch+1, cum_g_loss/num_batches, cum_d_loss/num_batches))
   #print(epoch+1)
   #print(epoch+1%10)
   if((epoch+1) % 1 == 0):
     print("SHOW")
     show_samples("epoch" + str(epoch))
+  
 
 generator.save("test")
