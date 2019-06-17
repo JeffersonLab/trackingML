@@ -104,7 +104,7 @@ void MakeDataset(string dirname, int Nevents)
 	// (generate these only on firsat call so all set use the same!)
 	static vector<int> shifts;
 	if( shifts.empty() ){
-		for(auto x : xplane) shifts.push_back( (int)(3.0 + 94.0*n_dis(gen)) );
+		//for(auto x : xplane) shifts.push_back( (int)(3.0 + 94.0*n_dis(gen)) );
 		for(auto x : xplane) shifts.push_back( 0 );
 		cout << "shifts: ";
 		for( auto s : shifts ) cout << s << ", ";
