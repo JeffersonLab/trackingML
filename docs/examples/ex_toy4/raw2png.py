@@ -47,17 +47,17 @@ with gzip.open('images.raw.gz') as f:
 
 	# Skip iMIN images at front of file
 	if iMIN>0:
-		print 'Skipping %d images ...' % iMIN
+		print('Skipping %d images ...' % iMIN)
 		f.read(width*height*iMIN)
 			
 	# Create images from next iNUM records
-	print 'Creating %d images in %s ...' % (iNUM, outputdir)
+	print('Creating %d images in %s ...' % (iNUM, outputdir))
 	for i in range(0,iNUM):
 
 		# Read record and make it the right shape
 		bytes = f.read(width*height)
 		if len(bytes) != (width*height):
-			print '\n File truncated!'
+			print('\n File truncated!')
 			break
 		data = np.frombuffer(bytes, dtype='B', count=width*height)
 		pixels = np.reshape(data, [height, width])
@@ -76,6 +76,6 @@ with gzip.open('images.raw.gz') as f:
 			sys.stdout.write(' created %d/%d images\r' % (Ncreated,iNUM))
 			sys.stdout.flush()
 	
-print 'Created ' + str(Ncreated) + ' image files'
-print 'Done'
+print('Created ' + str(Ncreated) + ' image files')
+print('Done')
 	
