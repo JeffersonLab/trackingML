@@ -50,7 +50,8 @@ pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
 	imutils \
 	pillow \
 	scikit-learn \
-	opencv-python
+	opencv-python \
+	pypng
 ```
 
 You can now jump to the ALL CONFIGURATIONS section below.
@@ -75,7 +76,8 @@ pip install --trusted-host pypi.org --trusted-host files.pythonhosted.org \
 	imutils \
 	pillow \
 	scikit-learn \
-	opencv-python
+	opencv-python \
+	pypng
 ```
 
 At this point you should download the cudnn binary package from
