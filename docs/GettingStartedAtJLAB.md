@@ -8,29 +8,27 @@ This system uses Python to build and train the network using the
 keras package which itself uses tensorflow as a backend. Tensorflow
 can optionally support GPUs (see instructions below).
 
-These instructions also rely on python's easy_install and virtualenv
+These instructions also rely on python's virtualenv
 to set up a dedicated python environment where you can install the
 needed packages without needing sysadmin privileges.
 
 
 The basic steps are:
-1. install pip in user directory using easy_install
-2. use pip to install virtualenv
-3. use virtualenv to create dedicated python environment (venv)
-4. use pip from venv to install all required python packages
-5. (optional) download cudNN and install precompiled Linux binaries
+1. create a python3 virtual environment (venv)
+2. update pip in the venv
+3. use pip from venv to install all required python packages
+4. (optional) download cudNN and install precompiled Linux binaries
    in venv by hand
 
 
 Here are the detailed commands:
 
 ```
-easy_install --user pip
-~/.local/bin/pip install --user virtualenv
-~/.local/bin/virtualenv venv
+/apps/bin/python3 -m venv venv
 source venv/bin/activate.csh
+pip install --upgrade pip
 ```
-(If using bash, use `source venv/bin/activate` in the last line instead.)
+(If using bash, use `source venv/bin/activate` in the 2nd line instead.)
 
 At this point the instructions are slightly different if you want
 to setup for GPU support or not. Choose the correct section below
@@ -113,9 +111,9 @@ Test that the installation has installed keras and tensorflow
 correctly using an interactive python session:
 
 ```
-> python
-Python 2.7.5 (default, Nov 20 2015, 02:00:19)
-[GCC 4.8.5 20150623 (Red Hat 4.8.5-4)] on linux2
+>python
+Python 3.4.3 (default, Apr 10 2015, 10:35:21) 
+[GCC 4.8.3 20140911 (Red Hat 4.8.3-9)] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import keras
 Using TensorFlow backend.
