@@ -55,6 +55,7 @@ using namespace std;
 
 
 double hit_efficiency = 1.0; // per pixel efficiency
+bool HIT_ONLY = false; // true=no drift distance  false=include drift distance
 uint8_t HIT_COLOR = 0xff;
 uint8_t OFF_COLOR = 0x00;
 
@@ -148,6 +149,7 @@ void MakeDataset(string dirname, int Nevents)
 			// Here we use 150 color units = 5mm (the maximum drift distance)
 			double y_bin_center = floor(y) + 0.5;  // wire position
 			double drift_dist = fabs(y - y_bin_center + dd_dis(gen));
+			if( HIT_ONLY ) drift_dist = 0.0;
 			auto color = drift_dist*150.0/0.5; // 150 units of color = 0.5cm
 			if( color>150.0 ) color = 150.0;
 			if( HIT_COLOR == 0xff ) color = 255.0 - color;
