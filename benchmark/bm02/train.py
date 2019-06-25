@@ -42,7 +42,7 @@ width  = 36
 height = 100
 EPOCHS = 10
 BS     = 2000
-GPUS   = 1
+GPUS   = 2
 Nouts  = 60
 
 # Open labels files so we can get number of samples and pass the
@@ -129,7 +129,7 @@ def DefineModel():
 	opt = Adadelta(clipnorm=1.0)
 	parallel_model.compile(loss='mse', optimizer=opt, metrics=['mae', 'mse', 'accuracy'])
 	
-	return parallel_model
+	return (parallel_model, model)
 
 #===============================================================================
 
@@ -149,7 +149,7 @@ if epoch_loaded > 0:
 	model = load_model( fname )
 else:
 	print('Unable to find saved model. Will start from scratch')
-	model = DefineModel()
+	(model, orig_model) = DefineModel()
 
 # Print summary of model
 model.summary()
@@ -190,7 +190,7 @@ class checkpointModel(Callback):
 			os.remove( old_fname )
 		print('saving model: %s' % fname)
 		self.model_to_save.save(fname)
-cbk = checkpointModel( model )
+cbk = checkpointModel( orig_model )
 
 
 # Fit the model
