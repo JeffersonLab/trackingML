@@ -26,7 +26,7 @@ Here are the detailed commands:
 ```
 /apps/bin/python3 -m venv venv
 source venv/bin/activate.csh
-pip install --upgrade pip
+pip install --upgrade pip --trusted-host pypi.org --trusted-host files.pythonhosted.org
 ```
 (If using bash, use `source venv/bin/activate` in the 2nd line instead.)
 
@@ -62,7 +62,7 @@ INSTALL WITH GPU SUPPORT
 ==============================
 This will install packages needed to utilze an Nvidia GPU device
 on the system. The only interactive system I am aware of at the
-moment is hpci12k01 which has an Nvidia K20.
+moment is hpci12k01 which has 4 Nvidia K20 gpus.
 
 
 Here are the detailed commands:
@@ -84,21 +84,21 @@ At this point you should download the cudnn binary package from
 Nvidia. That requires an active account (which is free) and a
 little URL manipulation to get the correct version. To make it
 easier, I've placed a copy on the CUE as seen in the first
-instruction below. The second just moves the libraries into a
-directory where python will find them when running tensorflow.
+instruction below. The second instruction just moves the libraries
+into a directory where python will find them when running tensorflow.
 
 ```
-tar xzf /group/12gev_phys/ml/downloads/cudnn-9.0-linux-x64-v7.3.1.20.tgz
-mv cuda/lib64/libcudnn* venv/lib/python2.7/site-packages/tensorflow
+tar xzf /group/12gev_phys/ml/downloads/cudnn-10.0-linux-x64-v7.4.2.24.tgz
+mv cuda/lib64/libcudnn* venv/lib/python3.4/site-packages/tensorflow
 rm -rf cuda
 ```
 
-The last thing you need to do is pull cuda 9.0 into your
+The last thing you need to do is pull cuda 10.0 into your
 environment. This is only available on computers with GPUs
 (e.g. hpci12k01).
  
 ```
-module load cuda9.0
+module load cuda10.0
 ```
 
 ALL CONFIGURATIONS
