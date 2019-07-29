@@ -91,7 +91,7 @@ def generate_arrays_from_file( path, labelsdf ):
 				wires = np.argmax(pixels_norm, axis=0).flatten()
 
 				# Read one label
-				phi = labelsdf.phi[idx]
+				phi = np.arctan( labelsdf.phi[idx] )
 				z   = labelsdf.z[idx]
 				idx += 1
 
@@ -143,6 +143,29 @@ def MyWeightedAvg(inputs, binsize, xmin):
 	return output
 
 # -----------------------------------------------------
+# MyProduct
+#
+# This is used to make a layer that has the products of
+# all elements of the input layer. Thus the output layer
+# has N^2 nodes if the input layer has N nodes
+# -----------------------------------------------------
+def MyProduct(inputs):
+
+	N = inputs.shape[1]
+	outputs = []
+	for i in range(0, N):
+		for j in range(0, N):
+			idx = i + j*N
+			outputs.append( inputs[:, i] * inputs[:, j] )
+
+	output = K.transpose( K.stack( outputs ) )
+	print('MyProduct:')
+	print('   input shape = %s' % str(inputs.shape))
+	print('  output shape = %s' % str(output.shape))
+
+	return output
+
+# -----------------------------------------------------
 # MyRatio
 #
 # This is used for layers where a simple ratio from two nodes
@@ -151,7 +174,6 @@ def MyWeightedAvg(inputs, binsize, xmin):
 def MyRatio(inputs):
 
 	output = inputs[:,0]/inputs[:,1]
-	ones = K.ones_like(inputs[0, :])  # [1, 1, 1, 1....]   (size Nouts)
 
 	print('MyRatio:')
 	print('   input shape = %s' % str(inputs.shape))
@@ -164,8 +186,7 @@ def MyRatio(inputs):
 # MyFirstLayer
 #
 # inputs are 36 wire ids
-# outputs are 36+36=72 values. First 36 are x_i*y_i
-#                              Second 36 are Sx*y_i
+# outputs are N, Sx, Sy, Sxx, Sxy
 #
 # Sx is made from sum of x values of each layer. Since
 # x-values are static information, we let the network
@@ -180,7 +201,7 @@ def MyRatio(inputs):
 #-----------------------------------------------------
 class MyFirstLayer(Layer):
 
-	def __init__(self, output_dim, **kwargs):
+	def __init__(self, output_dim=5, **kwargs):
 		self.output_dim = output_dim
 		print('self.output_dim: ' + str(self.output_dim))
 		super(MyFirstLayer, self).__init__(**kwargs)
@@ -192,24 +213,40 @@ class MyFirstLayer(Layer):
 		# is added to the model below.
 		print('input_shape.shape: ' + str(input_shape))
 		self.kernel = self.add_weight(name='kernel',
-									  shape=(36,1),
+									  shape=(width,1),
 									  initializer='uniform',
 									  trainable=True)
+
+		# Initialize the weights
+		x = 30.0
+		x_weights = self.get_weights()
+		x_vals = []
+		for igroup in range(0,6):
+			for ichamber in range(0,6):
+				idx = ichamber + (igroup*6)
+				x_weights[0][idx] = x
+				x += 1.0
+			x += 49.0 # already pushed to 1 past last plane of previous group
+		self.set_weights( x_weights )
+		print(self.get_weights())
+
 		super(MyFirstLayer, self).build(input_shape)  # Be sure to call this at the end
 
 	def call(self, y):
 		# The 36 weights being fit in the kernel are the x-values of the planes
+		N   = width*K.ones_like(y[:,0])
 		Sx  = K.sum(self.kernel)*K.ones_like(y[:,0])
 		Sxx = K.sum(self.kernel*self.kernel)*K.ones_like(y[:,0])
 		Sy  = K.sum(y, axis=1)
 		Sxy = K.sum(K.transpose(y)*self.kernel, axis=0)
 		print('     y: ' + str(   y ) + '  (transpose:' + str(K.transpose(y)) + ')')
+		print('     N: ' + str(   N ))
 		print('    Sx: ' + str(  Sx ))
 		print('   Sxx: ' + str( Sxx ))
 		print('    Sy: ' + str(  Sy ))
 		print('   Sxy: ' + str( Sxy ))
 		print('kernel: ' + str(self.kernel) )
-		out = K.transpose(K.stack( (Sx, Sy, Sxx, Sxy) ))
+		out = K.transpose(K.stack( (N, Sx, Sy, Sxx, Sxy) ))
 		print('   out: ' +  str(out) )
 		return out
 
@@ -242,14 +279,15 @@ def DefineCommonModel(inputs):
 	# is products of these. Sepcifically Sxy, SxSy, SxxSy, and SxSxy.
 
 	#x = Input(shape=(width,), name='inputs')
-	x = MyFirstLayer(4, name='Sx_Sy_Sxx_Sxy')(inputs)
+	x = MyFirstLayer(5, name='N_Sx_Sy_Sxx_Sxy')(inputs)
+	x = Lambda(MyProduct, output_shape=(25,), name='S_products')(x)
 	return x
 
 #-----------------------------------------------------
 # DefinePhiModel
 #-----------------------------------------------------
 def DefinePhiModel(inputs):
-	x = Dense(2, name='phi_output_dist', activation='linear', kernel_initializer="glorot_uniform")(inputs)
+	x = Dense(2, name='phi_output_sums', activation='linear', kernel_initializer="glorot_uniform")(inputs)
 	x = Lambda(MyRatio, output_shape=(1,), name='phi_output')(x)
 	return x
 	
@@ -289,7 +327,7 @@ def DefineModel():
 	# We also specify a weight for each branch. The weights allow us to 
 	# specify that it is more important to minimize certain losses more
 	# than others.
-	sigma_phi = 10000.011  # estimated resolution in degrees (from previous training)
+	sigma_phi = 1000.011  # estimated resolution in degrees (from previous training)
 	sigma_z   = 0.100  # estimated resolution in cm (from previous training)
 	losses = {
 		'phi_output'      :  'mean_squared_error',
@@ -314,6 +352,7 @@ def DefineModel():
 
 #===============================================================================
 
+#keras.layers.MyFirstLayer = MyFirstLayer
 
 # Here we want to check if a model has been saved due to previous training.
 # If so, then we read it in and continue training where it left off. Otherwise,
@@ -330,7 +369,7 @@ for f in os.listdir('model_checkpoints'):
 
 if epoch_loaded > 0:
 	print('Loading model: ' + fname)
-	model = load_model( fname )
+	model = load_model( fname, custom_objects={'MyFirstLayer':MyFirstLayer} )
 else:
 	print('Unable to find saved model. Will start from scratch')
 	model = DefineModel()
