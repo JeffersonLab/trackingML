@@ -50,14 +50,16 @@ trusted-host =
 
 6. Install the ipykernel into the venv and the venv into your list of kernels:
 
-   `pip install ipykernel
-python -m ipykernel install --user --name=venv`
+   `pip install ipykernel`
+
+   `python -m ipykernel install --user --name=venv`
 
 
 7. At this point a new option for "venv" should be there in your launcher for both "Notebook" and "Console". You can verify that it is using your virtual environment by doing something like:
 
-   `import sys
-print(sys.path)`
+   `import sys`
+
+   `print(sys.path)`
 
 
 Notes:
